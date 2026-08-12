@@ -1,32 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-const routes = [
-  {
-    path: "/",
-    element: <h1>Hello</h1>
-  }
-];
-
-const router = createBrowserRouter(routes,{
-  future:{
-    v7_relativeSplatpath: true,
-    v7_fetcherPersist: true,
-    v7_normalizeFormMethod: true,
-    v7_partialhydration: true,
-    v7_skipActionErrorRevalidation: true,
-  
-  }
-});
-
+import { Outlet } from 'react-router-dom';
+import Layout from './layouts/layout';
 
 const App = () => {
   return (
-    <RouterProvider router={router}
-    future={{
-      v7_startTransition: true,
-    }}
-    />
+    <Layout>
+      <Outlet />
+    </Layout>
+
   )
 }
 
 export default App
+
