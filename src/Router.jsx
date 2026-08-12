@@ -1,12 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import { Children } from "react";
+
+
+
 
 const routes = [
     {
         path: "/",
         element: <App />,
-        Children: [{
+        children: [{
 
         }]
     }
