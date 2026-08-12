@@ -1,7 +1,7 @@
 
 const App = () => {
   return (
-    <h1>Hotel Management</h1>
+    <h1 className="text-4xl font-bold underline">Hotel Management</h1>
   )
 }
 
