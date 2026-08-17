@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
+import Roomlist from "./pages/Roomlist";
+
 
 
 
@@ -8,9 +10,13 @@ const routes = [
     {
         path: "/",
         element: <App />,
-        children: [{
+        children: [
+            {
+                index: true,
+                element: <Roomlist />
 
-        }]
+            }
+        ]
     }
 ];
 
