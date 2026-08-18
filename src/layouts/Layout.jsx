@@ -6,6 +6,7 @@ import twitter from '../assets/images/logos.png';
 import pinterest from '../assets/images/pinterest.png';
 import youtube from '../assets/images/youtube.png';
 import { Link } from 'react-router-dom';
+import user from '../assets/images/user.png';
 
 const Layout = ({ children }) => {
 
@@ -14,10 +15,11 @@ const Layout = ({ children }) => {
         <div className="min-h-screen flex flex-col">
             <nav className="bg-blue-900 text-white p-4">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-lg font-bold ">APPLE TREE<img src={appletree} alt="Logo" className="inline-block h-8 w-8 ml-2" />  </h1>
+                    <h1 className="text-lg font-bold ">Apple tree<img src={appletree} alt="Logo" className="inline-block h-8 w-8 ml-2" />  </h1>
                     <div className="flex space-x-4">
                         <Link to ="/register" className="hover:underline font-medium">Register</Link>
-                        <Link to="/login" className="hover:underline font-medium">Login</Link>
+                        <Link to="/login" className="hover:underline font-medium">SignIn</Link>
+                        <button><img src={user} alt="User" className="inline-block h-8 w-8 ml-2" /></button>
                     </div>
                 </div>
             </nav>
