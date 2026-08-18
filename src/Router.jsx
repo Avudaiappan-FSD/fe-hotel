@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import Roomlist from "./pages/Roomlist";
-
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 
 
@@ -11,11 +12,10 @@ const routes = [
         path: "/",
         element: <App />,
         children: [
-            {
-                index: true,
-                element: <Roomlist />
+            { path: "", element: <Home /> },
+            { path: "register", element: <Register /> },
+            { path: "login", element:<Login/>}
 
-            }
         ]
     }
 ];
