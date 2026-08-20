@@ -1,16 +1,27 @@
-import React from 'react'
+import { useDispatch, useSelector } from "react-redux";
+import { selectName, selectEmail, selectPassword } from "../redux/features/auth/registerslice";
+import { setName, setEmail, setPassword } from "../redux/features/auth/registerslice";
 
 const Register = () => {
-  const handleregister = (e) => {
-    e.preventDefault()
+
+  const name = useSelector(selectName);
+  const email = useSelector(selectEmail);
+  const password = useSelector(selectPassword);
+
+  const dispatch = useDispatch();
+  const handleregister =async (e) => {
+    await e.preventDefault()
     console.log('Register button clicked');
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Password:', password);
     // Handle registration logic here
   }
 
   return (
-    <div className='max-w-md mx-auto mt-20 p-4 border rounded shadow'>
-      <h2 className='text-xl mb-4'>Register</h2>
-          <form className='flex flex-col space-y-3'>
+    <div className='max-w-md mx-auto mt-20 p-4  border rounded shadow'>
+      <h2 className='text-xl mb-5 font-bold'>Register</h2>
+      <form className='flex flex-col space-y-3'>
         <div className='mb-4'>
           <label htmlFor='name' className='block text-sm font-medium text-gray-700'>
             Name
@@ -19,6 +30,9 @@ const Register = () => {
             type='text'
             id='name'
             className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+            // value={name}
+            onChange={(e) => dispatch(setName(e.target.value))}
+
           />
         </div>
         <div className='mb-4'>
@@ -29,6 +43,8 @@ const Register = () => {
             type='email'
             id='email'
             className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+            // value={email}
+            onChange={(e) => dispatch(setEmail(e.target.value))}
           />
         </div>
         <div className='mb-4'>
@@ -39,6 +55,8 @@ const Register = () => {
             type='password'
             id='password'
             className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
+            // value={password}
+            onChange={(e) => dispatch(setPassword(e.target.value))}
           />
         </div>
         <button
