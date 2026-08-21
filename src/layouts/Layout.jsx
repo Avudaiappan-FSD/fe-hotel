@@ -1,15 +1,26 @@
 import phone from '../assets/images/phone-contact.png';
-
-
 import insta from '../assets/images/instagram.png';
 import fb from '../assets/images/facebook.png';
 import twitter from '../assets/images/logos.png';
 import pinterest from '../assets/images/pinterest.png';
 import youtube from '../assets/images/youtube.png';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import user from '../assets/images/user.png';
 
+
+
 const Layout = ({ children }) => {
+
+    const navigate = useNavigate();
+    const handlenavlogin = () => {
+        navigate('/login');
+    }
+    const handlenavregister = () => {
+        navigate('/register');
+    }
+    const handlenavlogout = () => {
+        navigate('/logout');
+    }
 
     return (
 
@@ -18,11 +29,14 @@ const Layout = ({ children }) => {
                 <div className="flex justify-between items-center">
                     <h1 className="text-lg font-bold " style={{ fontFamily: "Satisfy", fontSize: "1.55rem", color: "black" }}>  Apple tree  </h1>
                     <div className="flex space-x-4">
-                        <button className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Register</button>
-                        <button className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>SignIn</button>
-                        <button ><img src={user} alt="User" className="inline-block h-8 w-8 ml-2" /></button>
+
+                        {! user &&<button onClick={handlenavregister} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Register</button>}
+                        {!user && <button onClick={handlenavlogin} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>SignIn</button>}
+                        {user && <button onClick={handlenavlogout} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Log Out</button>}
+                        {user && <button ><img src={user} alt="User" className="inline-block h-8 w-8 ml-2" /></button>}
                     </div>
                 </div>
+
             </nav>
 
 
