@@ -11,22 +11,26 @@ const Login = () => {
     const password = useSelector(selectPassword);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-const handlelogin = async (e) => {
-    await e.preventDefault()
-    console.log('Login button clicked');
-    // Handle login logic here
-   try{
-      const response = await authServices.login({ email, password });
-      if(response.status === 200) {
-        toast.success(`Login Successfully`);
-        dispatch(setEmail(''));
-        dispatch(setPassword(''));
-        navigate('/');
-      }
-   }catch(err){
-    toast.error(err.response.data.message);
-   }
-  }
+    const handlelogin = async (e) => {
+        await e.preventDefault()
+        console.log('Login button clicked');
+        // Handle login logic here
+        try {
+            const response = await authServices.login({ email, password });
+            if (response.status === 200) {
+                toast.success(`Login Successfully`);
+                dispatch(setEmail(''));
+                dispatch(setPassword(''));
+                setTimeout(() => {
+                    navigate('/Roomlist', { replace: true });
+                }, 1000);
+
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.message || "login fail");
+            console.log(err);
+        }
+    }
 
     return (
         <div className='max-w-md mx-auto mt-20 p-4 border rounded shadow'>
@@ -40,7 +44,7 @@ const handlelogin = async (e) => {
                         type='email'
                         id='email'
                         className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                        onChange={e=>dispatch(setEmail(e.target.value))}
+                        onChange={e => dispatch(setEmail(e.target.value))}
                     />
                 </div>
                 <div className='mb-4'>
@@ -51,11 +55,11 @@ const handlelogin = async (e) => {
                         type='password'
                         id='password'
                         className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500'
-                        onChange={e=>dispatch(setPassword(e.target.value))}
+                        onChange={e => dispatch(setPassword(e.target.value))}
                     />
                 </div>
                 <button
-                    type='submit'onClick={handlelogin}
+                    type='submit' onClick={handlelogin}
                     className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded'
                 >
                     Login

@@ -1,41 +1,38 @@
 import { useEffect } from "react";
 import authServices from "../services/authServices";
 import { toast } from "react-toastify";
-import { useRevalidator } from "react-router-dom";
-import { useLoaderData } from "react-router-dom";
-
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearuser } from "../redux/features/auth/userslice";
 
 const Logout = () => {
-
-  const revalidator = useRevalidator();
-  const user = useLoaderData();
-  console.log(user);
-
-  const logoutuser = async () => {
-    try {
-      const response = await authServices.logout();
-      if (response.status === 200) {
-        toast.success(response.data.message);
-        await revalidator.revalidate();
-        setTimeout(() => {
-          window.location.href = "/"; // Redirect to login page after logout
-        }, 1000);
-
-
-      }
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    logoutuser();
-  }, []);
+    const logoutuser = async () => {
+      try {
+        const response = await authServices.logout();
 
-  return (
-    <div>logout.....</div>
-  )
-}
+        if (response.status === 200) {
+          toast.success("Logout successfully");
+        }
+
+      } catch (error) {
+        console.log("Logout error:", error);
+      } finally {
+        // Redux user clear
+        dispatch(clearuser());
+
+        // Home page
+        navigate("/", { replace: true });
+      }
+    };
+
+    logoutuser();
+  }, [dispatch, navigate]);
+
+  return <div>Logout.....</div>;
+};
 
 export default Logout;

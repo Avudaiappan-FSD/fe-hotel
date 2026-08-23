@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import authLoader from "./loader/unit/authLoader";
 import Logout from "./pages/Logout";
+import Roomlist from "./pages/Roomlist";
 
 
 
@@ -19,6 +20,7 @@ const routes = [
             { path: "register", element: <Register /> },
             { path: "login", element: <Login /> },
             { path: "logout", element: <Logout /> },
+            { path: "Roomlist", element: <Roomlist /> },
 
         ],
 
