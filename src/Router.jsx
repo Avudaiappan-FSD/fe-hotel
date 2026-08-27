@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import authLoader from "./loader/unit/authLoader";
 import Logout from "./pages/Logout";
 import Roomlist from "./pages/Roomlist";
+import roomLoader from "./loader/unit/roomLoader";
 
 
 
@@ -20,7 +21,10 @@ const routes = [
             { path: "register", element: <Register /> },
             { path: "login", element: <Login /> },
             { path: "logout", element: <Logout /> },
-            { path: "Roomlist", element: <Roomlist /> },
+            { path: "Roomlist", element: <Roomlist />,
+                loader: roomLoader,
+                hydrateFallbackElement:<p>loading....</p>
+             },
 
         ],
 

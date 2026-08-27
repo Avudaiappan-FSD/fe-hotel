@@ -4,7 +4,7 @@ import fb from '../assets/images/facebook.png';
 import twitter from '../assets/images/logos.png';
 import pinterest from '../assets/images/pinterest.png';
 import youtube from '../assets/images/youtube.png';
-import { useNavigate, useLocation, replace } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import authServices from '../services/authServices';
 import userlogo from '../assets/images/user.png';
@@ -13,7 +13,6 @@ import { selectUser, setUser, clearuser } from '../redux/features/auth/userslice
 import { useDispatch } from 'react-redux';
 
 const Layout = ({ children }) => {
-    const location = useLocation();
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const [loading, setloading] = useState(true);
@@ -30,7 +29,7 @@ const Layout = ({ children }) => {
             }
         };
         getuser();
-    }, [dispatch]);
+    }, [user]);
     const navigate = useNavigate();
     const handlenavlogin = () => {
         navigate('/login');
@@ -39,7 +38,6 @@ const Layout = ({ children }) => {
         navigate('/register');
     }
     const handlenavlogout = () => {
-        dispatch(clearuser());
         navigate('/logout', { replace: true });
     }
 
@@ -50,7 +48,7 @@ const Layout = ({ children }) => {
                 <div className="flex justify-between items-center">
                     <h1 className="text-lg font-bold " style={{ fontFamily: "Satisfy", fontSize: "1.55rem", color: "black" }}>  Apple tree  </h1>
                     {
-                        user && user.user.role === "customer" && (
+                        user?.user?.role === "customer" && (
                             <div className='flex justify-between items-center'>
                                 <>
                                     <input type="text" placeholder="Chennai" className="px-10 py-2 rounded block w-full p-4 pl-1 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
@@ -60,23 +58,20 @@ const Layout = ({ children }) => {
                         )}
 
                     <div className="flex space-x-4">
-                        {loading ? (
-                            <button className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Log Out</button>
-                        ) :
-                            !user?.user ? (
-                                <>
-                                    <button onClick={handlenavregister} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Register</button>
-                                    <button onClick={handlenavlogin} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>SignIn</button>
-                                </>
-                            ) : (
+                        {!user?.user ? (
+                            <>
+                                <button onClick={handlenavregister} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Register</button>
+                                <button onClick={handlenavlogin} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>SignIn</button>
+                            </>
+                        ) : (
 
-                                <>
-                                    <button onClick={handlenavlogout} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Log Out</button>
-                                    <button>
-                                        <img src={userlogo} alt="logo" className="inline-block h-8 w-8 ml-2" />
-                                    </button>
-                                </>
-                            )
+                            <>
+                                <button onClick={handlenavlogout} className='hover:bg-blue-800 font-medium px-4 py-2 rounded'>Log Out</button>
+                                <button>
+                                    <img src={userlogo} alt="logo" className="inline-block h-8 w-8 ml-2" />
+                                </button>
+                            </>
+                        )
                         }
 
                     </div>

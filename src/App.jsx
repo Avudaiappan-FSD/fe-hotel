@@ -1,26 +1,31 @@
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Layout from './layouts/Layout';
-import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { clearuser, setUser } from './redux/features/auth/userslice';
+import { useEffect } from 'react';
+import { clearuser,setUser } from './redux/features/auth/userslice';
+import authServices from './services/authServices';
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useLoaderData();
-  console.log(user)
   useEffect(() => {
-    if (user) {
-      dispatch(setUser(user));
-    } else {
-      dispatch(clearuser())
-    }
-  }, [user])
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    const getCurrentUser = async () => {
+      try {
+        const response = await authServices.me();
+        if (response.status === 200) {
+          dispatch(setUser(response.data));
+        }
+      } catch(error) {
+       dispatch(clearuser());
+      }
+    };
+    getCurrentUser();
+},[dispatch])
+return (
+  <Layout>
+    <Outlet />
+  </Layout>
 
-  )
+)
 }
 
 export default App

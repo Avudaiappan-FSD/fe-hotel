@@ -23,6 +23,7 @@ const Logout = () => {
       } finally {
         // Redux user clear
         dispatch(clearuser());
+        console.log("after logout clear user")
 
         // Home page
         navigate("/", { replace: true });

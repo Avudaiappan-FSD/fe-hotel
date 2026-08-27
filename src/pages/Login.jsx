@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { selectEmail, selectPassword } from "../redux/features/auth/loginslice";
 import { setEmail, setPassword } from "../redux/features/auth/loginslice";
 import authServices from "../services/authServices";
+import { setUser } from "../redux/features/auth/userslice";
 
 
 const Login = () => {
@@ -19,11 +20,12 @@ const Login = () => {
             const response = await authServices.login({ email, password });
             if (response.status === 200) {
                 toast.success(`Login Successfully`);
+                dispatch(setUser(response.data));
                 dispatch(setEmail(''));
                 dispatch(setPassword(''));
-                setTimeout(() => {
-                    navigate('/Roomlist', { replace: true });
-                }, 1000);
+                setTimeout(
+                    navigate('/Roomlist', { replace: true })
+                ),1000
 
             }
         } catch (err) {
