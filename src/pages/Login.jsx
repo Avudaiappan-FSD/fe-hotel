@@ -7,20 +7,21 @@ import authServices from "../services/authServices";
 import { setUser } from "../redux/features/auth/userslice";
 
 
+
 const Login = () => {
     const email = useSelector(selectEmail);
     const password = useSelector(selectPassword);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handlelogin = async (e) => {
-        await e.preventDefault()
+         e.preventDefault()
         console.log('Login button clicked');
         // Handle login logic here
         try {
             const response = await authServices.login({ email, password });
             if (response.status === 200) {
                 toast.success(`Login Successfully`);
-                dispatch(setUser(response.data));
+                dispatch(setUser(response.data.user));
                 dispatch(setEmail(''));
                 dispatch(setPassword(''));
                 setTimeout(

@@ -45,7 +45,7 @@ const roomImages = [
 const RoomList = () => {
   const rooms = useLoaderData();
 
-  console.log("Rooms:", rooms);
+  console.log(rooms);
 
   return (
     <div className="min-h-screen bg-gray-100 px-6 py-10">

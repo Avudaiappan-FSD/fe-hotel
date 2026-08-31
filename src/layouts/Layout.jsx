@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { selectUser, setUser, clearuser } from '../redux/features/auth/userslice';
 import { useDispatch } from 'react-redux';
 
+
 const Layout = ({ children }) => {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Layout = ({ children }) => {
 
             try {
                 const response = await authServices.me();
-                dispatch(setUser(response.data));
+                dispatch(setUser(response.data.user));
             } catch (error) {
                 dispatch(clearuser());
             } finally {
@@ -29,7 +30,7 @@ const Layout = ({ children }) => {
             }
         };
         getuser();
-    }, [user]);
+    }, [dispatch ]);
     const navigate = useNavigate();
     const handlenavlogin = () => {
         navigate('/login');
