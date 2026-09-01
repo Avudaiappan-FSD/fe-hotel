@@ -44,7 +44,6 @@ const roomImages = [
 
 const RoomList = () => {
   const rooms = useLoaderData();
-
   console.log(rooms);
 
   return (

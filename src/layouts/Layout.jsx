@@ -10,14 +10,14 @@ import { selectUser } from '../redux/features/auth/userslice';
 import userimage from '../assets/images/user.png';
 
 
-const Layout = ({ children }) => {
+const Layout = ({ children}) => {
     const navigate = useNavigate();
     const user = useSelector(selectUser);
     return (
         <div className='min-h-screen flex flex-col'>
             <nav className='bg-blue-700 text-white p-4 flex justify-between'>
                 <div className='flex flex-grow'>
-                    <h1 className='font-bold'>Apple tree</h1>
+                    <h1 className='font-bold text-2xl'>Apple tree</h1>
                     <div className='ml-auto'>
                         {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/register")}>Register</button>}
                         {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/login")}>login</button>}
