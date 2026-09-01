@@ -4,16 +4,27 @@ import fb from '../assets/images/facebook.png';
 import twitter from '../assets/images/logos.png';
 import pinterest from '../assets/images/pinterest.png';
 import youtube from '../assets/images/youtube.png';
+import { replace, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/features/auth/userslice';
 
 const Layout = ({ children }) => {
-
+    const navigate = useNavigate();
+    const user = useSelector(selectUser);
     return (
         <div className='min-h-screen flex flex-col'>
             <nav className='bg-red-800 text-white p-4 flex justify-between'>
                 <div className='flex flex-grow '>
                     <h2>Apple tree</h2>
-                    <button className='mr-4'>Register</button>
-                    <button className='mr-4'>login</button>
+                    {!user && <button className='mr-4 flex flex-grow' onClick={() => navigate("/register")}>Register</button>}
+                    {!user && <button className='mr-4 flex flex-grow' onClick={() => navigate("/login")}>login</button>}
+                </div>
+                <div>
+                    {
+                        user && (
+                            <button className='bg-red-500 px-3 py-1 rounded' onClick={() => navigate("/logout", { replace: true })}>Logout</button>
+                        )
+                    }
                 </div>
             </nav>
             <main className="flex-grow p-4">

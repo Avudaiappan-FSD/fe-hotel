@@ -6,7 +6,7 @@ export const registerslice = createSlice({
     form:{
         name: '',
         email: '',
-        password: '',
+        password: ''
     }
 },
 reducers: {
