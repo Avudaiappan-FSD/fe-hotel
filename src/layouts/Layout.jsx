@@ -4,25 +4,43 @@ import fb from '../assets/images/facebook.png';
 import twitter from '../assets/images/logos.png';
 import pinterest from '../assets/images/pinterest.png';
 import youtube from '../assets/images/youtube.png';
-import { replace, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/features/auth/userslice';
+import userimage from '../assets/images/user.png';
+
 
 const Layout = ({ children }) => {
     const navigate = useNavigate();
     const user = useSelector(selectUser);
     return (
         <div className='min-h-screen flex flex-col'>
-            <nav className='bg-red-800 text-white p-4 flex justify-between'>
-                <div className='flex flex-grow '>
-                    <h2>Apple tree</h2>
-                    {!user && <button className='mr-4 flex flex-grow' onClick={() => navigate("/register")}>Register</button>}
-                    {!user && <button className='mr-4 flex flex-grow' onClick={() => navigate("/login")}>login</button>}
+            <nav className='bg-blue-700 text-white p-4 flex justify-between'>
+                <div className='flex flex-grow'>
+                    <h1 className='font-bold'>Apple tree</h1>
+                    <div className='ml-auto'>
+                        {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/register")}>Register</button>}
+                        {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/login")}>login</button>}
+                    </div>
+
                 </div>
-                <div>
+                {
+                    user && user.user.role === 'customer' && (
+                        <div className='flex justify-between items-center'>
+                            <input type="text" placeholder="chennai" className="px-10 py-2 rounded block w-full" />
+                            <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded'>Search</button>
+                        </div>
+                    )
+                }
+
+                <div className='ml-auto' >
                     {
                         user && (
-                            <button className='bg-red-500 px-3 py-1 rounded' onClick={() => navigate("/logout", { replace: true })}>Logout</button>
+                            <div>
+                                <button className='bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/logout")}>Logout</button>
+                                <img src={userimage} alt="User" className="inline-block h-8 w-8 ml-2 rounded-full" />
+                            </div>
+
                         )
                     }
                 </div>

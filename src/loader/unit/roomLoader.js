@@ -4,7 +4,7 @@ const roomLoader = async()=>{
         const response = await roomServices.getallrooms();
         return response.data;
     }catch(error){
-        console.log(error);
+        console.log(error.response.data.message);
     }
 }
 
