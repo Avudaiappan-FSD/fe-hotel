@@ -10,12 +10,13 @@ import { selectUser } from '../redux/features/auth/userslice';
 import userimage from '../assets/images/user.png';
 
 
-const Layout = ({ children}) => {
+
+const Layout = ({ children }) => {
     const navigate = useNavigate();
     const user = useSelector(selectUser);
     return (
         <div className='min-h-screen flex flex-col'>
-            <nav className='bg-blue-700 text-white p-4 flex justify-between'>
+            <nav className=' p-4 flex justify-between'>
                 <div className='flex flex-grow'>
                     <h1 className='font-bold text-2xl'>Apple tree</h1>
                     <div className='ml-auto'>
@@ -24,14 +25,6 @@ const Layout = ({ children}) => {
                     </div>
 
                 </div>
-                {
-                    user && user.user.role === 'customer' && (
-                        <div className='flex justify-between items-center'>
-                            <input type="text" placeholder="chennai" className="px-10 py-2 rounded block w-full" />
-                            <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded'>Search</button>
-                        </div>
-                    )
-                }
 
                 <div className='ml-auto' >
                     {

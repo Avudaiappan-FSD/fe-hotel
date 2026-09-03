@@ -5,14 +5,14 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Roomlist from "./pages/Roomlist";
-import roomLoader from "./loader/unit/roomLoader";
+import roomsLoader from "./loader/unit/roomsLoader";
 import authloader from "./loader/unit/authLoader"
 const routes = [
     {
         path: "/",
         element: <App />,
         loader: authloader,
-        hydrateFallbackElement:<div>loading</div>,
+        // hydrateFallbackElement:<div>loading</div>,
         children: [
             { path: "", element: <Home /> },
             { path: "register", element: <Register /> },
@@ -20,8 +20,7 @@ const routes = [
             { path: "logout", element: <Logout /> },
             {
                 path: "Roomlist", element: <Roomlist />,
-                loader: roomLoader,
-                hydrateFallbackElement: <p>loading....</p>
+                loader: roomsLoader,
             },
 
         ],

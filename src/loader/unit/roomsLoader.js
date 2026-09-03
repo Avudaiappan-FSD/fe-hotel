@@ -1,5 +1,5 @@
 import roomServices from "../../services/roomServices";
-const roomLoader = async()=>{
+const roomsLoader = async()=>{
     try{
         const response = await roomServices.getallrooms();
         return response.data;
@@ -8,4 +8,4 @@ const roomLoader = async()=>{
     }
 }
 
-export default roomLoader;
+export default roomsLoader;
