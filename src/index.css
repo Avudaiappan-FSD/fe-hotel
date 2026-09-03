@@ -1,2 +1,9 @@
 @import "tailwindcss";
 
+.profileheader {
+display: flex;
+align-items: center;
+gap: 6px;
+padding: 15px 10px;
+
+}

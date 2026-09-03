@@ -1,4 +1,4 @@
-import instance from '../utils/axiosInstance';
+import instance from "./instance";;
 
 const userServices = {
     getprofile: async()=>{
@@ -11,3 +11,4 @@ const userServices = {
         return await instance.delete('/user/profile');
     }
 }
+export default userServices;    

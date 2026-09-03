@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
                         user && (
                             <div>
                                 <button className='bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/logout")}>Logout</button>
-                                <img src={userimage} alt="User" className="inline-block h-8 w-8 ml-2 rounded-full" />
+                                <img src={userimage} alt="User" className="inline-block h-8 w-8 ml-2 rounded-full" onClick={() => navigate("/Profile")} />
                             </div>
 
                         )

@@ -7,12 +7,13 @@ import Logout from "./pages/Logout";
 import Roomlist from "./pages/Roomlist";
 import roomsLoader from "./loader/unit/roomsLoader";
 import authloader from "./loader/unit/authLoader"
+import Profile from "./pages/Profile";
+import userLoader from "./loader/unit/userLoader";
 const routes = [
     {
         path: "/",
         element: <App />,
         loader: authloader,
-        // hydrateFallbackElement:<div>loading</div>,
         children: [
             { path: "", element: <Home /> },
             { path: "register", element: <Register /> },
@@ -21,6 +22,10 @@ const routes = [
             {
                 path: "Roomlist", element: <Roomlist />,
                 loader: roomsLoader,
+            },
+            {
+                path: "Profile", element: <Profile />,
+                loader: userLoader,
             },
 
         ],
