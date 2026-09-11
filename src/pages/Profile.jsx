@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import edit from "../assets/images/edit.png";
 import userService from "../services/userServices";
-import authServices from "../services/authServices";
 
 const Profile = () => {
 
-    const me = useLoaderData();
-
+    const loaderdata = useLoaderData();
+    console.log(loaderdata)
+    const [me, setMe] = useState(loaderdata);
     const [isEdit, setIsEdit] = useState(false);
 
     const [name, setName] = useState(me.user.name);
@@ -17,12 +17,10 @@ const Profile = () => {
         e.preventDefault();
 
         try {
-            await userService.updateprofile({
-                name,
-                email
-            });
-            const response = await authServices.me();
-            console.log(response)
+            const response = await userService.updateprofile({ name, email });
+            setMe({
+                ...me, user: { ...me.user, name: name, email: email }
+            })
 
             setIsEdit(false);
 
