@@ -9,6 +9,8 @@ import roomsLoader from "./loader/unit/roomsLoader";
 import authloader from "./loader/unit/authLoader"
 import Profile from "./pages/Profile";
 import userLoader from "./loader/unit/userLoader";
+import Room from "./pages/Room";
+import roomLoader from "./loader/unit/roomLoader";
 const routes = [
     {
         path: "/",
@@ -26,6 +28,10 @@ const routes = [
             {
                 path: "Profile", element: <Profile />,
                 loader: userLoader,
+            },
+            {
+                path: "Rooms/:id", element: <Room />,
+                loader: roomLoader,
             },
 
         ],

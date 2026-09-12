@@ -22,27 +22,27 @@ import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
 
 
-const roomImages = [
-  room1,
-  room2,
-  room3,
-  room4,
-  room5,
-  room7,
-  room8,
-  room9,
-  room10,
-  room11,
-  room12,
-  room13,
-  room14,
-  room15,
-  room16,
-  room17,
-  room18,
-  room19,
-  room20,
-];
+const roomImages = {
+  101: room1,
+  102: room2,
+  103: room3,
+  104: room4,
+  105: room5,
+  106: room7,
+  107: room8,
+  108: room9,
+  109: room10,
+  110: room11,
+  111: room12,
+  112: room13,
+  113: room14,
+  114: room15,
+  115: room16,
+  116: room17,
+  117: room18,
+  118: room19,
+  119: room20,
+};
 
 
 const RoomList = () => {
@@ -114,7 +114,7 @@ const RoomList = () => {
 
           <input
             type="text"
-            placeholder="Search by room number, room type, location..."
+            placeholder="Search by room type and location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
@@ -182,7 +182,7 @@ const RoomList = () => {
                    md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
       >
 
-        {filteredRooms?.map((room, index) => (
+        {filteredRooms?.map((room) => (
 
           <div
             key={room._id}
@@ -196,7 +196,7 @@ const RoomList = () => {
             <div className="relative h-60 overflow-hidden">
 
               <img
-                src={roomImages[index % roomImages.length]}
+                src={roomImages[room.roomnumber]}
                 alt={`Room ${room.roomnumber}`}
                 className="w-full h-full object-cover
                            hover:scale-110 transition duration-500"
@@ -327,9 +327,7 @@ const RoomList = () => {
               </button>
 
             </div>
-
           </div>
-
         ))}
 
       </div>

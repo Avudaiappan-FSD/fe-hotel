@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/features/auth/userslice';
 import userimage from '../assets/images/user.png';
-
+import tree from '../assets/images/tree.png'
 
 
 const Layout = ({ children }) => {
@@ -18,6 +18,7 @@ const Layout = ({ children }) => {
         <div className='min-h-screen flex flex-col'>
             <nav className=' p-4 flex justify-between'>
                 <div className='flex flex-grow'>
+                    <img src={tree} alt='treeimg' className="inline-block h-8 w-8 ml-2" />
                     <h1 className='font-bold text-2xl'>Apple tree</h1>
                     <div className='ml-auto'>
                         {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/register")}>Register</button>}

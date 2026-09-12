@@ -16,8 +16,8 @@ const roomServices = {
     getroombylocation: async (data) => {
         return await instance.get('rooms/rooms/location/' + data);
     },
-    getroombyid: async (data) => {
-        return await instance.get('rooms/rooms/' + data);
+    getroombyid: async (id) => {
+        return await instance.get(`rooms/rooms/${id}`);
     },
     updateroom: async (data, id) => {
         return await instance.put('rooms/rooms/' + id, data);
