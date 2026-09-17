@@ -49,8 +49,8 @@ const Room = () => {
     console.log(roombyid);
 
     return (
-        <div className="p-5 mt-10 mx-90 bg-color-blue" >
-            < div className="room-card">
+        <div className="p-5 mt-10 mx-90 bg-red-900 rounded-2xl " >
+            < div className="room-card bg-green-900 p-20 rounded-2xl mw-50 text-white font-bold-6xl">
                 <img src={roomImages[roombyid.roomnumber]} alt={`Room $ roombyid.roomnumber`} />
                 <h1>Room number: {roombyid.roomnumber}</h1>
                 <p>RoomType: {roombyid.roomtype}</p>
@@ -58,6 +58,7 @@ const Room = () => {
                 <p>{roombyid.description}</p>
                 <p>{roombyid.location}</p>
                 <p>{roombyid.capacity}</p>
+                 <button className="bg-blue-700 rounded p-2 text-white font-bold cursor-pointer">Book Room</button>
             </div>
         </div>
     )

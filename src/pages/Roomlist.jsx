@@ -1,5 +1,6 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -46,7 +47,7 @@ const roomImages = {
 
 
 const RoomList = () => {
-
+  const navigate = useNavigate();
   const rooms = useLoaderData();
 
   // Search state
@@ -178,6 +179,7 @@ const RoomList = () => {
       {/* ================= ROOM CARDS ================= */}
 
       <div
+
         className="max-w-7xl mx-auto grid grid-cols-1 
                    md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
       >
@@ -189,19 +191,18 @@ const RoomList = () => {
             className="bg-white rounded-2xl overflow-hidden shadow-lg
                        hover:shadow-2xl hover:-translate-y-1
                        transition duration-300"
+            onClick={() => navigate(`/rooms/${room._id}`)}
           >
 
             {/* ================= IMAGE ================= */}
 
             <div className="relative h-60 overflow-hidden">
-
               <img
                 src={roomImages[room.roomnumber]}
                 alt={`Room ${room.roomnumber}`}
                 className="w-full h-full object-cover
                            hover:scale-110 transition duration-500"
               />
-
 
               {/* Availability */}
 
@@ -311,11 +312,10 @@ const RoomList = () => {
 
 
               {/* ================= BOOK BUTTON ================= */}
-
               <button
                 disabled={!room.isavailable}
                 className={`w-full mt-5 py-3 rounded-xl
-                            font-semibold transition duration-300
+                            font-semibold transition duration-300 cursor-pointer
                             ${room.isavailable
                     ? "bg-blue-600 text-white hover:bg-blue-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -325,14 +325,11 @@ const RoomList = () => {
                   ? "Book This Room"
                   : "Not Available"}
               </button>
-
             </div>
           </div>
         ))}
 
       </div>
-
-
       {/* ================= NO ROOMS ================= */}
 
       {(!filteredRooms || filteredRooms.length === 0) && (
