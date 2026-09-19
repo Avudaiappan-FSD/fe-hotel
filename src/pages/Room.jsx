@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import bookingServices from "../services/bookingServices";
+import { useSelector } from "react-redux";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -23,30 +25,30 @@ import room20 from "../assets/room images/images.jpeg";
 
 
 const roomImages = {
-  101: room1,
-  102: room2,
-  103: room3,
-  104: room4,
-  105: room5,
-  106: room7,
-  107: room8,
-  108: room9,
-  109: room10,
-  110: room11,
-  111: room12,
-  112: room13,
-  113: room14,
-  114: room15,
-  115: room16,
-  116: room17,
-  117: room18,
-  118: room19,
-  119: room20,
+    101: room1,
+    102: room2,
+    103: room3,
+    104: room4,
+    105: room5,
+    106: room7,
+    107: room8,
+    108: room9,
+    109: room10,
+    110: room11,
+    111: room12,
+    112: room13,
+    113: room14,
+    114: room15,
+    115: room16,
+    116: room17,
+    117: room18,
+    118: room19,
+    119: room20,
 };
 
 const Room = () => {
     const room = useLoaderData();
-
+    const user = useSelector((state) => state.user?.user);
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
 
@@ -77,7 +79,7 @@ const Room = () => {
 
     const totalPrice = nights * room.price;
 
-    const handleBooking = () => {
+    const handleBooking = async () => {
         if (!checkIn || !checkOut) {
             alert("Please select check-in and check-out dates");
             return;
@@ -87,17 +89,23 @@ const Room = () => {
             alert("Check-out date must be after check-in date");
             return;
         }
+        try {
+            const createBooking = {
+                userId: user._id,
+                roomId: room._id,
+                checkIn,
+                checkout: checkOut,
+                numberofGuests: room.capacity,
+                totalPrice,
+            };
+            const response = await bookingServices.createBooking(createBooking);
+            console.log("Booking created :", response.data)
+            alert("Room Booked Successfully");
+        } catch (error) {
+            console.log("Booking error:", error.response?.data || error.message);
 
-        console.log({
-            roomId: room._id,
-            roomNumber: room.roomnumber,
-            checkIn,
-            checkOut,
-            nights,
-            totalPrice,
-        });
+        }
 
-        alert("Booking details ready!");
     };
 
     return (
