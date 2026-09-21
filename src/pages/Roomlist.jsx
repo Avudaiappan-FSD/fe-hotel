@@ -49,7 +49,8 @@ const roomImages = {
 const RoomList = () => {
   const navigate = useNavigate();
   const rooms = useLoaderData();
-
+ console.log(rooms);
+ 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { data, useLoaderData } from "react-router-dom";
 import bookingServices from "../services/bookingServices";
 import { useSelector } from "react-redux";
 
@@ -91,12 +91,12 @@ const Room = () => {
         }
         try {
             const createBooking = {
-                userId: user._id,
+                userId: user?._id,
                 roomId: room._id,
-                checkIn,
+                numberofguests: room.capacity,
+                checkin: checkIn,
                 checkout: checkOut,
-                numberofGuests: room.capacity,
-                totalPrice,
+                totalprice: totalPrice,
             };
             const response = await bookingServices.createBooking(createBooking);
             console.log("Booking created :", response.data)

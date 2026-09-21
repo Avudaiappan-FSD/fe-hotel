@@ -4,11 +4,11 @@ const bookingServices = {
     createBooking: async (data) => {
         return await instance.post('/book/bookings', data);
     },
-    getmybookings: async () => {
-        return await instance.get('/book/bookings');
+    getmybookings: async (id) => {
+        return await instance.get(`/book/bookings/user/${id}`);
     },
     getallBookings: async () => {
-        return await instance.get('/book/bokings');
+        return await instance.get('/book/bookings');
     },
     getBookingById: async (id) => {
         return await instance.get(`/book/bookings/${id}`);
