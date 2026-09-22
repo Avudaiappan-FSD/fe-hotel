@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import edit from "../assets/images/edit.png";
 import userService from "../services/userServices";
-
 const Profile = () => {
 
     const loaderdata = useLoaderData();
     console.log(loaderdata)
+    const navigate = useNavigate()
     const [me, setMe] = useState(loaderdata);
     const [isEdit, setIsEdit] = useState(false);
 
@@ -73,9 +73,7 @@ const Profile = () => {
                             onChange={(e) => setName(e.target.value)}
                             className="border p-2 w-full mb-4"
                         />
-
                         <label>Email</label>
-
                         <input
                             type="email"
                             value={email}
@@ -115,8 +113,8 @@ const Profile = () => {
 
                         <p className="text-gray-700">
                             Email: {me.user.email}
-                        </p>
-
+                        </p><br />
+                        <button className="bg-blue-500 rounded p-2 cursor-pointer px-4 mx-10" onClick={()=>navigate('/MyBookings')}>My Bookings</button>
                     </div>
 
                 )}

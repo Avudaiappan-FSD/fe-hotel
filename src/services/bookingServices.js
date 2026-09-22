@@ -14,10 +14,10 @@ const bookingServices = {
         return await instance.get(`/book/bookings/${id}`);
     },
     updateBooking: async (data, id) => {
-        return await instance.put('/book/bookings' + id, data);
+        return await instance.put('/book/bookings/' + id, data);
     },
     deleteBooking: async (id) => {
-        return await instance.delete('/book/bookings' + id)
+        return await instance.delete('/book/bookings/' + id)
     }
 
 }

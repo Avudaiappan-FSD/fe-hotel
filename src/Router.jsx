@@ -11,6 +11,8 @@ import Profile from "./pages/Profile";
 import userLoader from "./loader/unit/userLoader";
 import Room from "./pages/Room";
 import roomLoader from "./loader/unit/roomLoader";
+import MyBookings from "./pages/MyBookings";
+import getmybookingsloader from "./loader/unit/getmybookingsloader";
 const routes = [
     {
         path: "/",
@@ -33,6 +35,10 @@ const routes = [
                 path: "Rooms/:id", element: <Room />,
                 loader: roomLoader,
             },
+            {
+                path: "MyBookings/:id", element: <MyBookings />,
+                loader: getmybookingsloader,
+            }
 
         ],
         hydrateFallbackElement: <div>Loading...</div>
