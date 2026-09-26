@@ -114,7 +114,7 @@ const Profile = () => {
                         <p className="text-gray-700">
                             Email: {me.user.email}
                         </p><br />
-                        <button className="bg-blue-500 rounded p-2 cursor-pointer px-4 mx-10" onClick={()=>navigate('/MyBookings')}>My Bookings</button>
+                        <button className="bg-blue-500 rounded p-2 cursor-pointer px-4 mx-10" onClick={() => navigate(`/MyBookings/${me.user._id}`)}>My Bookings</button>
                     </div>
 
                 )}
