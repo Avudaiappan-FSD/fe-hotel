@@ -13,6 +13,10 @@ import Room from "./pages/Room";
 import roomLoader from "./loader/unit/roomLoader";
 import MyBookings from "./pages/MyBookings";
 import getmybookingsloader from "./loader/unit/getmybookingsloader";
+import Adminroom from "./pages/adminroom";
+import CreateRoom from "./pages/CreateRoom";
+import UpdateRoom from "./pages/UpdateRoom";
+import DeleteRoom from "./pages/DeleteRoom";
 const routes = [
     {
         path: "/",
@@ -38,7 +42,13 @@ const routes = [
             {
                 path: "MyBookings/:id", element: <MyBookings />,
                 loader: getmybookingsloader,
-            }
+            },
+            {
+                path: "adminroom", element: <Adminroom />,
+            },
+            { path: "CreateRoom", element: <CreateRoom /> },
+            { path: "updateroom", element: <UpdateRoom />},
+            { path: "deleteroom", element: <DeleteRoom />}
 
         ],
         hydrateFallbackElement: <div>Loading...</div>
