@@ -5,7 +5,6 @@ import userService from "../services/userServices";
 const Profile = () => {
 
     const loaderdata = useLoaderData();
-    console.log(loaderdata)
     const navigate = useNavigate()
     const [me, setMe] = useState(loaderdata);
     const [isEdit, setIsEdit] = useState(false);

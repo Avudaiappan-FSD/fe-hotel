@@ -13,7 +13,6 @@ const Register = () => {
   const navigate = useNavigate();
   const handleregister = async (e) => {
     e.preventDefault();
-    console.log('registering...');
     try {
       const response = await authServices.register({ name, email, password });
       if (response.status === 200) {
