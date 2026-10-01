@@ -2,6 +2,7 @@ import { useState } from "react";
 import { data, useLoaderData } from "react-router-dom";
 import bookingServices from "../services/bookingServices";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -49,6 +50,9 @@ const roomImages = {
 const Room = () => {
     const room = useLoaderData();
     const user = useSelector((state) => state.user?.user);
+    console.log(user);
+    const navigate = useNavigate();
+
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
 
@@ -281,19 +285,23 @@ const Room = () => {
 
                             </div>
                         )}
-
                         {/* Booking Button */}
-                        <button
-                            onClick={handleBooking}
-                            disabled={!room.isavailable}
-                            className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
-                        >
-                            {room.isavailable ? "Book Now" : "Room Not Available"}
-                        </button>
-
+                        {user?.role === "customer" || user?.role === "receptionist" ? (
+                            <button
+                                onClick={handleBooking}
+                                disabled={!room.isavailable}
+                                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
+                            >
+                                {room.isavailable ? "Book Now" : "Room Not Available"}
+                            </button>) : (
+                            <div>
+                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room.id}`)}>Update Room</button>
+                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room.id}`)}>Delete Room</button>
+                            </div>
+                        )}
                     </div>
-
                 </div>
+
             </div>
         </div>
     );

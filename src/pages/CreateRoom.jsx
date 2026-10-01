@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setroomnumber, setroomtype, setprice, setcapacity, setdescription, setlocation } from "../redux/features/auth/roomslice"
-import { useNavigate } from "react-router-dom";
 import roomServices from "../services/roomServices";
 
 const CreateRoom = () => {
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const form = useSelector((state) => state.room.form);
   const createRoom = async (e) => {

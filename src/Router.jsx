@@ -47,8 +47,8 @@ const routes = [
                 path: "Adminroom", element: <Adminroom />,
             },
             { path: "CreateRoom", element: <CreateRoom /> },
-            { path: "UpdateRoom", element: <UpdateRoom /> },
-            { path: "DeleteRoom", element: <DeleteRoom /> }
+            { path: "UpdateRoom/:id", element: <UpdateRoom /> },
+            { path: "DeleteRoom/:id", element: <DeleteRoom /> }
 
         ],
         hydrateFallbackElement: <div>Loading...</div>
