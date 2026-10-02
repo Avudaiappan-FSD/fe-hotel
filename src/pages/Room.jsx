@@ -295,8 +295,8 @@ const Room = () => {
                                 {room.isavailable ? "Book Now" : "Room Not Available"}
                             </button>) : (
                             <div>
-                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room.id}`)}>Update Room</button>
-                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room.id}`)}>Delete Room</button>
+                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room._id}`)}>Update Room</button>
+                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room._id}`)}>Delete Room</button>
                             </div>
                         )}
                     </div>

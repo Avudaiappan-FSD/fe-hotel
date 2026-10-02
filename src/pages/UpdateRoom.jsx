@@ -87,6 +87,7 @@ const UpdateRoom = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
 
         {/* Room Number */}
+        <h2 className="text-xl">Room Number</h2>
         <input
           type="text"
           name="roomnumber"
@@ -95,8 +96,10 @@ const UpdateRoom = () => {
           onChange={handleChange}
           className="w-full border rounded-md p-3"
         />
+  
 
         {/* Room Type */}
+        <h2 className="text-xl">Room Type</h2>
         <input
           type="text"
           name="roomtype"
@@ -107,6 +110,7 @@ const UpdateRoom = () => {
         />
 
         {/* Price */}
+        <h2 className="text-xl">Room Price</h2>
         <input
           type="number"
           name="price"
@@ -117,6 +121,7 @@ const UpdateRoom = () => {
         />
 
         {/* Capacity */}
+        <h2 className="text-xl">Room Capacity</h2>
         <input
           type="number"
           name="capacity"
@@ -127,6 +132,7 @@ const UpdateRoom = () => {
         />
 
         {/* Description */}
+        <h2 className="text-xl">Room Description</h2>
         <textarea
           name="description"
           placeholder="Enter Room Description"
@@ -137,6 +143,7 @@ const UpdateRoom = () => {
         />
 
         {/* Location */}
+        <h2 className="text-xl">Location</h2>
         <input
           type="text"
           name="location"
@@ -149,7 +156,7 @@ const UpdateRoom = () => {
         {/* Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white rounded-md p-3 hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white rounded-md p-3 hover:bg-blue-700 transition duration-300"
         >
           Update Room
         </button>
