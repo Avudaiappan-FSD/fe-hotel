@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setroomnumber, setroomtype, setprice, setcapacity, setdescription, setlocation } from "../redux/features/auth/roomslice"
 import roomServices from "../services/roomServices";
+import { useNavigate } from "react-router-dom";
 
 const CreateRoom = () => {
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const form = useSelector((state) => state.room.form);
   const createRoom = async (e) => {
@@ -19,6 +21,9 @@ const CreateRoom = () => {
         dispatch(setcapacity(''));
         dispatch(setdescription(''));
         dispatch(setlocation(''));
+        setTimeout(() => {
+          navigate('/roomlist');
+        }, 500);
       }
     } catch (error) {
       console.error('Error creating room:', error.response?.data?.message || error.message);
