@@ -172,191 +172,226 @@ const RoomList = () => {
           for a relaxing and memorable stay.
         </p>
 
+        {/*=============== sidebar ===================*/}
+
       </div>
-
-
-      {/* ================= ROOM CARDS ================= */}
-
-      <div
-
-        className="max-w-7xl mx-auto grid grid-cols-1 
-                   md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
-      >
-
-        {filteredRooms?.map((room) => (
-
-          <div
-            key={room._id}
-            className="bg-white rounded-2xl overflow-hidden shadow-lg
-                       hover:shadow-2xl hover:-translate-y-1
-                       transition duration-300"
-            onClick={() => navigate(`/rooms/${room._id}`)}
-          >
-
-            {/* ================= IMAGE ================= */}
-
-            <div className="relative h-60 overflow-hidden">
-              <img
-                src={roomImages[room.roomnumber]}
-                alt={`Room ${room.roomnumber}`}
-                className="w-full h-full object-cover
-                           hover:scale-110 transition duration-500"
-              />
-
-              {/* Availability */}
-
-              <div className="absolute top-4 right-4">
-
-                {room.isavailable ? (
-
-                  <span
-                    className="bg-green-500 text-white px-3 py-1
-                               rounded-full text-sm font-semibold"
-                  >
-                    Available
-                  </span>
-
-                ) : (
-
-                  <span
-                    className="bg-red-500 text-white px-3 py-1
-                               rounded-full text-sm font-semibold"
-                  >
-                    Booked
-                  </span>
-
-                )}
-
+      <div className="max-w-8xl mx-auto px-4 flex gap-6 items-start full">
+        <div className="w-64 shrink-0 sticky top-24 self-start hidden lg:block">
+          <div className="bg-white rounded-2xl shadow-md p-6">
+            <h2 className="text-xl font-bold mb-5"> Room Filters</h2>
+            <input
+              type="text"
+              placeholder="Search rooms..."
+              className="w-full border rounded-lg p-2 mb-5" />
+            <h3 className="font-semibold mb-2">Room Type</h3>
+            <div className="space-y-2">
+              <label className="block">
+                <input type="checkbox" /> Single Room
+              </label>
+              <label className="block">
+                <input type="checkbox" /> Double Room
+              </label>
+              <label className="block">
+                <input type="checkbox" /> Deluxe Room
+              </label>
+              <br></br>
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-700 mb-3">Price Range</h3>
+                <div className="flex gap-2">
+                  <input type="number" placeholder="Min" className="w-1/2 border rounded-lg px-3 py-2 outline-none" />
+                  <input type="number" placeholder="max" className="w-1/2 border rounded-lg px-3 py-2 outline-none" />
+                </div>
+                <br></br>
+                <div className="mb-6">
+                  <h3 className="font-semibold text-gray-700 mb-3">Guests</h3>
+                  <label className="flex items-center gap-2 mb-2">
+                    <input type="radio" name="guests"></input>
+                    <span>1 Guest</span>
+                  </label>
+                  <label className="flex items-center gap-2 mb-2">
+                    <input type="radio" name="guests"></input>
+                    <span>2 Guests</span>
+                  </label>
+                  <label className="flex items-center gap-2 mb-2">
+                    <input type="radio" name="guests"></input>
+                    <span>3+ Guests</span>
+                  </label>
+                  <div className="mb-6">
+                    <h3 className="font-semibold text-gray-700 mb-3">Availability</h3>
+                    <label className="flex items-center gap-2">
+                      <input type="checkbox" />
+                      <span>Available only</span>
+                    </label>
+                  </div>
+                  <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
+                    Room Filters
+                  </button>
+                </div>
               </div>
-
-
-              {/* Room Number */}
-
-              <div className="absolute bottom-4 left-4">
-
-                <span
-                  className="bg-black/70 text-white px-4 py-2
-                             rounded-lg font-semibold"
-                >
-                  Room {room.roomnumber}
-                </span>
-
-              </div>
-
             </div>
+          </div>
+        </div>
+
+        {/* ================= ROOM CARDS ================= */}
+
+        <div
+
+          className="flex-1 min-w-0 space-y-6 "
+        >
+          {filteredRooms?.map((room) => (
+            <div
+              key={room._id}
+              onClick={() => navigate(`/rooms/${room._id}`)}
+              className="bg-white rounded-2xl overflow-hidden shadow-md flex flex-row md:flex-row hover:shadow-2xl transition duration-300 cursor-pointer"
+            >
+
+              {/* ================= IMAGE ================= */}
+              <div className="relative w-full md:w-1/2 h-64 md:h-auto">
+
+                <img
+                  src={roomImages[room.roomnumber]}
+                  alt={`Room ${room.roomnumber}`}
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+
+                {/* Room Number */}
+                <div className="absolute bottom-4 left-4">
+                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg font-semibold">
+                    Room {room.roomnumber}
+                  </span>
+                </div>
+
+                {/* Availability */}
+                <div className="absolute top-4 right-4">
+                  {room.isavailable ? (
+                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      Available
+                    </span>
+                  ) : (
+                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      Not Available
+                    </span>
+                  )}
+                </div>
+
+              </div>
 
 
-            {/* ================= CARD CONTENT ================= */}
-
-            <div className="p-6">
-
-              {/* Room Type + Price */}
-
-              <div className="flex justify-between items-start gap-3">
+              {/* ================= ROOM DETAILS ================= */}
+              <div className="w-1/2 p-6 flex flex-col justify-between">
 
                 <div>
 
-                  <h2
-                    className="text-2xl font-bold text-gray-800 capitalize"
-                  >
-                    {room.roomtype}
-                  </h2>
+                  {/* Room Type + Price */}
+                  <div className="flex justify-between items-start gap-4">
 
-                  <p className="text-gray-500 text-sm mt-1">
+                    <div>
+                      <p className="text-sm text-blue-600 font-semibold uppercase">
+                        {room.roomtype}
+                      </p>
+
+                      <h2 className="text-2xl font-bold text-gray-800 mt-1">
+                        Room {room.roomnumber}
+                      </h2>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-blue-600">
+                        ₹{room.price}
+                      </p>
+
+                      <p className="text-sm text-gray-500">
+                        / night
+                      </p>
+                    </div>
+
+                  </div>
+
+
+                  {/* Location */}
+                  <p className="text-gray-500 mt-3">
                     📍 {room.location}
                   </p>
 
+
+                  {/* Description */}
+                  <div className="mt-5">
+
+                    <h3 className="font-semibold text-gray-800 mb-2">
+                      About this room
+                    </h3>
+
+                    <p className="text-gray-600 text-sm leading-6">
+                      {room.description}
+                    </p>
+
+                  </div>
+
+
+                  {/* Capacity + Room Type */}
+                  <div className="flex gap-6 mt-5 text-sm text-gray-600">
+
+                    <span>
+                      👤 {room.capacity} Guests
+                    </span>
+
+                    <span>
+                      🛏️ {room.roomtype}
+                    </span>
+
+                  </div>
+
                 </div>
 
 
-                <div className="text-right">
-
-                  <p className="text-2xl font-bold text-blue-600">
-                    ₹{room.price}
-                  </p>
-
-                  <p className="text-xs text-gray-400">
-                    per night
-                  </p>
-
-                </div>
+                {/* ================= BOOK BUTTON ================= */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/rooms/${room._id}`);
+                  }}
+                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+                >
+                  View Room
+                </button>
 
               </div>
 
+            </div>
+          ))}
 
-              {/* Description */}
 
-              <p className="text-gray-600 mt-4 line-clamp-2">
-                {room.description}
+          {/* ================= NO ROOMS ================= */}
+
+          {(!filteredRooms || filteredRooms.length === 0) && (
+
+            <div className="text-center py-20">
+
+              <h2 className="text-2xl font-bold text-gray-800">
+                No rooms found
+              </h2>
+
+              <p className="text-gray-500 mt-2">
+                Try searching with another room number, room type or location.
               </p>
 
-
-              {/* Details */}
-
-              <div
-                className="flex items-center gap-4 mt-5 
-                           border-t pt-4 text-gray-600"
-              >
-
-                <span className="text-sm">
-                  👤 {room.capacity} Guest
-                  {room.capacity > 1 ? "s" : ""}
-                </span>
-
-                <span className="text-sm">
-                  🛏️ {room.roomtype}
-                </span>
-
-              </div>
-
-
-              {/* ================= BOOK BUTTON ================= */}
               <button
-                disabled={!room.isavailable}
-                className={`w-full mt-5 py-3 rounded-xl
-                            font-semibold transition duration-300 cursor-pointer
-                            ${room.isavailable
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
-              >
-                {room.isavailable
-                  ? "Book This Room"
-                  : "Not Available"}
-              </button>
-            </div>
-          </div>
-        ))}
-
-      </div>
-      {/* ================= NO ROOMS ================= */}
-
-      {(!filteredRooms || filteredRooms.length === 0) && (
-
-        <div className="text-center py-20">
-
-          <h2 className="text-2xl font-bold text-gray-800">
-            No rooms found
-          </h2>
-
-          <p className="text-gray-500 mt-2">
-            Try searching with another room number, room type or location.
-          </p>
-
-          <button
-            onClick={handleReset}
-            className="mt-5 bg-blue-600 text-white 
+                onClick={handleReset}
+                className="mt-5 bg-blue-600 text-white 
                        px-6 py-3 rounded-lg hover:bg-blue-700"
-          >
-            Show All Rooms
-          </button>
+              >
+                Show All Rooms
+              </button>
+
+            </div>
+
+          )}
 
         </div>
-
-      )}
-
+      </div>
     </div>
   );
+
 };
 
 
