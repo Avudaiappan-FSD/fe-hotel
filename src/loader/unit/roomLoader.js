@@ -6,6 +6,8 @@ const roomLoader = async ({ params }) => {
         return response.data
     } catch (error) {
         return null;
+        // console.log(error.response.message.data);
+        
 
 
     }

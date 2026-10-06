@@ -55,6 +55,23 @@ const RoomList = () => {
   // Filtered rooms
   const [filteredRooms, setFilteredRooms] = useState(rooms || []);
 
+  //selected roomtypes
+  const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
+
+  const handleRoomTypeChange = (type) => {
+    setSelectedRoomTypes((prev) => {
+      if (prev.includes(type)) {
+        return prev.filter((t) => t !== type);
+      } else {
+        return [...prev, type];
+      }
+    });
+  };
+  const roomfilteredRooms = (rooms || []).filter((room) => {
+    const roomType = room.roomtype?.toString().trim().toLowerCase();
+    const matchesRoomType = selectedRoomTypes.length === 0 || selectedRoomTypes.some((type) => type.trim().toLowerCase() === roomType);
+    return matchesRoomType
+  });
 
   // Search function
   const handleSearch = () => {
@@ -102,58 +119,7 @@ const RoomList = () => {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 py-10">
-
-      {/* ================= SEARCH BAR ================= */}
-
-      <div className="max-w-4xl mx-auto mb-10 px-4">
-
-        <div className="flex flex-col sm:flex-row gap-3 bg-white p-4 rounded-xl shadow-md">
-
-          {/* Search Input */}
-
-          <input
-            type="text"
-            placeholder="Search by room type and location..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-            className="flex-1 px-5 py-3 rounded-lg border border-gray-300 
-                       focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-
-          {/* Search Button */}
-
-          <button
-            onClick={handleSearch}
-            className="bg-blue-600 hover:bg-blue-700 text-white 
-                       font-semibold px-6 py-3 rounded-lg 
-                       transition duration-300"
-          >
-            Search
-          </button>
-
-
-          {/* Reset Button */}
-
-          <button
-            onClick={handleReset}
-            className="bg-gray-200 hover:bg-gray-300 
-                       text-gray-700 font-semibold px-6 py-3 
-                       rounded-lg transition duration-300"
-          >
-            Reset
-          </button>
-
-        </div>
-
-      </div>
-
+    <div className="min-h-screen py-10">
 
       {/* ================= HEADER ================= */}
 
@@ -175,24 +141,48 @@ const RoomList = () => {
         {/*=============== sidebar ===================*/}
 
       </div>
-      <div className="max-w-8xl mx-auto px-4 flex gap-6 items-start full">
+      <div className="flex gap-6 items-stretch">
         <div className="w-64 shrink-0 sticky top-24 self-start hidden lg:block">
-          <div className="bg-white rounded-2xl shadow-md p-6">
-            <h2 className="text-xl font-bold mb-5"> Room Filters</h2>
+          <div className="bg-white rounded-2xl shadow-md p-6 h-full">
+            <h2 className="text-xl font-bold mb-5">Room Filters</h2>
+
             <input
               type="text"
               placeholder="Search rooms..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+                if (e.key === "Backspace" && searchTerm === "") {
+                  handleReset();
+                }
+              }}
               className="w-full border rounded-lg p-2 mb-5" />
+
             <h3 className="font-semibold mb-2">Room Type</h3>
             <div className="space-y-2">
               <label className="block">
-                <input type="checkbox" /> Single Room
+                <input type="checkbox"
+                  name="roomtype"
+                  checked={selectedRoomTypes.includes("Single Room")}
+                  onChange={() => handleRoomTypeChange("Single Room")}
+                /> Single Room
               </label>
               <label className="block">
-                <input type="checkbox" /> Double Room
+                <input type="checkbox"
+                  name="roomtype"
+                  checked={selectedRoomTypes.includes("Double Room")}
+                  onChange={() => handleRoomTypeChange("Double Room")}
+                /> Double Room
               </label>
               <label className="block">
-                <input type="checkbox" /> Deluxe Room
+                <input type="checkbox"
+                  name="roomtype"
+                  checked={selectedRoomTypes.includes("Deluxe Room")}
+                  onChange={() => handleRoomTypeChange("Deluxe Room")}
+                /> Deluxe Room
               </label>
               <br></br>
               <div className="mb-6">
@@ -224,7 +214,7 @@ const RoomList = () => {
                     </label>
                   </div>
                   <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
-                    Room Filters
+                    Rooms Filter
                   </button>
                 </div>
               </div>
@@ -238,7 +228,7 @@ const RoomList = () => {
 
           className="flex-1 min-w-0 space-y-6 "
         >
-          {filteredRooms?.map((room) => (
+          {roomfilteredRooms?.map((room) => (
             <div
               key={room._id}
               onClick={() => navigate(`/rooms/${room._id}`)}
@@ -363,7 +353,7 @@ const RoomList = () => {
 
           {/* ================= NO ROOMS ================= */}
 
-          {(!filteredRooms || filteredRooms.length === 0) && (
+          {(!roomfilteredRooms || roomfilteredRooms.length === 0) && (
 
             <div className="text-center py-20">
 
