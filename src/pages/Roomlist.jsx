@@ -57,56 +57,41 @@ const RoomList = () => {
 
   //selected roomtypes
   const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
+  const applyFilters = (types, searchValue) => {
+    const search = searchValue.trim().toLowerCase();
+    const result = (rooms || []).filter((room) => {
+      const roomNumber =
+        room.roomnumber?.toString().toLowerCase() || "";
+      const roomType =
+        room.roomtype?.toString().toLowerCase() || "";
+      const location =
+        room.location?.toString().toLowerCase() || "";
+      const description =
+        room.description?.toString().toLowerCase() || "";
+      const matchesSearch = search === "" || roomNumber.includes(search) || roomType.includes(search) || location.includes(search) || description.includes(search);
+      const matchesRoomType = types.length === 0 || types.some((type) => String(type).trim().toLowerCase() === roomType);
+      return matchesRoomType && matchesSearch;
+    });
+    setFilteredRooms(result);
+  };
 
   const handleRoomTypeChange = (type) => {
-    setSelectedRoomTypes((prev) => {
+    setFilteredRooms((prev) => {
+      let updatedTypes;
       if (prev.includes(type)) {
-        return prev.filter((t) => t !== type);
+        updatedTypes = prev.filter((t) => t !== type);
       } else {
-        return [...prev, type];
+        updatedTypes = [...prev, type];
       }
+      applyFilters(updatedTypes, searchTerm);
+      return updatedTypes;
     });
   };
-  const roomfilteredRooms = (rooms || []).filter((room) => {
-    const roomType = room.roomtype?.toString().trim().toLowerCase();
-    const matchesRoomType = selectedRoomTypes.length === 0 || selectedRoomTypes.some((type) => type.trim().toLowerCase() === roomType);
-    return matchesRoomType
-  });
+  const roomfilteredRooms = filteredRooms
 
   // Search function
   const handleSearch = () => {
-
-    const search = searchTerm.trim().toLowerCase();
-
-    // If search box is empty
-    if (!search) {
-      setFilteredRooms(rooms || []);
-      return;
-    }
-
-    const result = (rooms || []).filter((room) => {
-
-      const roomNumber =
-        room.roomnumber?.toString().toLowerCase() || "";
-
-      const roomType =
-        room.roomtype?.toString().toLowerCase() || "";
-
-      const location =
-        room.location?.toString().toLowerCase() || "";
-
-      const description =
-        room.description?.toString().toLowerCase() || "";
-
-      return (
-        roomNumber.includes(search) ||
-        roomType.includes(search) ||
-        location.includes(search) ||
-        description.includes(search)
-      );
-    });
-
-    setFilteredRooms(result);
+    applyFilters(selectedRoomTypes, searchTerm);
   };
 
 
@@ -151,16 +136,8 @@ const RoomList = () => {
               placeholder="Search rooms..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-                if (e.key === "Backspace" && searchTerm === "") {
-                  handleReset();
-                }
-              }}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               className="w-full border rounded-lg p-2 mb-5" />
-
             <h3 className="font-semibold mb-2">Room Type</h3>
             <div className="space-y-2">
               <label className="block">
