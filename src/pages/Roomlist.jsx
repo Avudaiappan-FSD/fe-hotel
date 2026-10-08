@@ -55,6 +55,7 @@ const RoomList = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedGuests, setSelectedGuests] = useState("");
   const [availableOnly, setAvailableOnly] = useState("false");
+  const [showFilters, setShowFilters] = useState("false");
 
   // Filtered rooms
   const [filteredRooms, setFilteredRooms] = useState(rooms || []);
@@ -205,8 +206,7 @@ const RoomList = () => {
                       <span>Available only</span>
                     </label>
                   </div>
-                  <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
-                    Rooms Filter
+                  <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg" onClick={() => setShowFilters(!showFilters)}>{showFilters ? "Close Filters" : "Rooms Filters"}
                   </button>
                 </div>
               </div>
