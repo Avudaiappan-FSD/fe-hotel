@@ -51,13 +51,17 @@ const RoomList = () => {
   const rooms = useLoaderData();
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [selectedGuests, setSelectedGuests] = useState("");
+  const [availableOnly, setAvailableOnly] = useState("false");
 
   // Filtered rooms
   const [filteredRooms, setFilteredRooms] = useState(rooms || []);
 
   //selected roomtypes
   const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
-  const applyFilters = (types, searchValue) => {
+  const applyFilters = (types, searchValue, min, max, guests, available) => {
     const search = searchValue.trim().toLowerCase();
     const result = (rooms || []).filter((room) => {
       const roomNumber =
@@ -70,7 +74,11 @@ const RoomList = () => {
         room.description?.toString().toLowerCase() || "";
       const matchesSearch = search === "" || roomNumber.includes(search) || roomType.includes(search) || location.includes(search) || description.includes(search);
       const matchesRoomType = types.length === 0 || types.some((type) => String(type).trim().toLowerCase() === roomType);
-      return matchesRoomType && matchesSearch;
+      const matchesPrice = (min === "" || room.price >= parseFloat(min)) && (max === "" || room.price <= parseFloat(max));
+      const capacity = Number(room.capacity || 0);
+      const matchesGuests = guests === "" || capacity >= Number(guests);
+      const matchesAvailability = !available || room.isavailable === true || room.isavailable === "true";
+      return matchesRoomType && matchesSearch && matchesPrice && matchesGuests && matchesAvailability;
     });
     setFilteredRooms(result);
   };
@@ -83,15 +91,16 @@ const RoomList = () => {
       } else {
         updatedTypes = [...prev, type];
       }
-      applyFilters(updatedTypes, searchTerm);
+      applyFilters(updatedTypes, searchTerm, minPrice, maxPrice, selectedGuests);
       return updatedTypes;
     });
   };
+
   const roomfilteredRooms = filteredRooms
 
   // Search function
   const handleSearch = () => {
-    applyFilters(selectedRoomTypes, searchTerm);
+    applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, selectedGuests);
   };
 
 
@@ -165,28 +174,34 @@ const RoomList = () => {
               <div className="mb-6">
                 <h3 className="font-semibold text-gray-700 mb-3">Price Range</h3>
                 <div className="flex gap-2">
-                  <input type="number" placeholder="Min" className="w-1/2 border rounded-lg px-3 py-2 outline-none" />
-                  <input type="number" placeholder="max" className="w-1/2 border rounded-lg px-3 py-2 outline-none" />
+                  <input type="number" placeholder="Min" className="w-1/2 border rounded-lg px-3 py-2 outline-none" value={minPrice} onChange={(e) => {
+                    const value = e.target.value;
+                    setMinPrice(value); applyFilters(selectedRoomTypes, searchTerm, value, maxPrice);
+                  }} />
+                  <input type="number" placeholder="max" className="w-1/2 border rounded-lg px-3 py-2 outline-none" value={maxPrice} onChange={(e) => {
+                    const value = e.target.value;
+                    setMaxPrice(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, value);
+                  }} />
                 </div>
                 <br></br>
                 <div className="mb-6">
                   <h3 className="font-semibold text-gray-700 mb-3">Guests</h3>
                   <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests"></input>
+                    <input type="radio" name="guests" value="1" checked={selectedGuests === "1"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
                     <span>1 Guest</span>
                   </label>
                   <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests"></input>
+                    <input type="radio" name="guests" value="2" checked={selectedGuests === "2"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
                     <span>2 Guests</span>
                   </label>
                   <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests"></input>
+                    <input type="radio" name="guests" value="3+" checked={selectedGuests === "3+"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
                     <span>3+ Guests</span>
                   </label>
                   <div className="mb-6">
                     <h3 className="font-semibold text-gray-700 mb-3">Availability</h3>
                     <label className="flex items-center gap-2">
-                      <input type="checkbox" />
+                      <input type="checkbox" checked={availableOnly} onChange={(e) => { const value = e.target.checked; setAvailableOnly(e.target.value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, selectedGuests, value) }} />
                       <span>Available only</span>
                     </label>
                   </div>
