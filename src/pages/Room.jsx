@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { data, useLoaderData } from "react-router-dom";
 import bookingServices from "../services/bookingServices";
 import { useSelector } from "react-redux";
@@ -48,6 +48,9 @@ const roomImages = {
 };
 
 const Room = () => {
+    const [isBooked, setIsBooked] = useState(false);
+    const [isAvailable, setIsAvailable] = useState(null);
+    const [checkingAvailability, setcheckingAvailability] = useState(false);
     const room = useLoaderData();
     const user = useSelector((state) => state.user?.user);
     console.log(user);
@@ -82,6 +85,29 @@ const Room = () => {
     }
 
     const totalPrice = nights * room.price;
+    const checkRoomAvailability = async () => {
+        if (!room?._id || !checkIn || !checkOut) {
+            setIsAvailable(null);
+            return;
+        }
+        if (new Date(checkOut) <= new Date(checkIn)) {
+            setIsAvailable(null);
+            return;
+        }
+        try {
+            setcheckingAvailability(true);
+            const response = await bookingServices.checkRoomAvailability(room._id, checkIn, checkOut);
+            setIsAvailable(response.data.available);
+        } catch (error) {
+            console.log("Availability error:", error.response?.data.message);
+            setIsAvailable(null)
+        } finally {
+            setcheckingAvailability(false)
+        }
+    }
+    useEffect(() => {
+        checkRoomAvailability();
+    }, [room?._id, checkIn, checkOut])
 
     const handleBooking = async () => {
         if (!checkIn || !checkOut) {
@@ -91,6 +117,10 @@ const Room = () => {
 
         if (new Date(checkOut) <= new Date(checkIn)) {
             alert("Check-out date must be after check-in date");
+            return;
+        }
+        if (isAvailable !== true) {
+            alert("This room is not available for the selected dates");
             return;
         }
         try {
@@ -103,10 +133,13 @@ const Room = () => {
                 totalprice: totalPrice,
             };
             const response = await bookingServices.createBooking(createBooking);
+            setIsAvailable(false);
             console.log("Booking created :", response.data)
             alert("Room Booked Successfully");
+            setIsBooked(true);
         } catch (error) {
             console.log("Booking error:", error.response?.data || error.message);
+            alert("This room is already booked by someone else")
 
         }
 
@@ -289,16 +322,17 @@ const Room = () => {
                         {user?.role === "customer" || user?.role === "receptionist" ? (
                             <button
                                 onClick={handleBooking}
-                                disabled={!room.isavailable}
+                                disabled={!room.isavailable || isBooked}
                                 className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
                             >
-                                {room.isavailable ? "Book Now" : "Room Not Available"}
+                                {room.isavailable || isBooked ? "Book Now" : "Booked"}
                             </button>) : (
                             <div>
-                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room._id}`)}>Update Room</button>
-                                <button className="mt-7 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room._id}`)}>Delete Room</button>
+                                <button className="mt-6 w-min-0 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room._id}`)}>Update Room</button>
+                                <button className="mt-6 w-min-0 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room._id}`)}>Delete Room</button>
                             </div>
                         )}
+
                     </div>
                 </div>
 
