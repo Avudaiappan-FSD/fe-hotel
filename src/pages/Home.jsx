@@ -1,8 +1,8 @@
-
+import home from "../assets/images/home.jpeg"
 const Home = () => {
     return (
         <div>
-            <h1>Home</h1> 
+            <div className=""><img src={home} /></div> 
         </div>
     )
 }
