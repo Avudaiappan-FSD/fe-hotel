@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
             <nav className=' p-4 flex justify-between'>
                 <div className='flex flex-grow'>
                     <img src={tree} alt='treeimg' className="inline-block h-8 w-8 ml-2" />
-                    <h1 className='font-bold text-2xl'>Apple tree</h1>
+                    <h1 className='font-bold text-2xl text-green-900'>Apple tree</h1>
                     <div className='ml-auto'>
                         {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/register")}>Register</button>}
                         {!user && <button className='mr-4 bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded' onClick={() => navigate("/login")}>login</button>}
