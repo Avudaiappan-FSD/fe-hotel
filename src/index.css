@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-
+/* 
 @theme {
     --color-primary: #2563EB;
     --color-secondary: #FBBF24;
-}
+} */
 
 * {
     font-family: Outfit;
@@ -643,5 +644,11 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+
+    .home-rooms {
+        padding: 60px 6%;
+        background: #f7f5f0;
+        overflow: hidden;
     }
 }

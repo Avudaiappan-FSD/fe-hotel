@@ -1,7 +1,62 @@
-import home from "../assets/images/home.jpeg";
 
+import room1 from "../assets/room images/images (1).jpeg";
+import room2 from "../assets/room images/images (2).jpeg";
+import room3 from "../assets/room images/images (3).jpeg";
+import room4 from "../assets/room images/images (4).jpeg";
+import room5 from "../assets/room images/images (5).jpeg";
+import room7 from "../assets/room images/images (7).jpg";
+import room8 from "../assets/room images/images (8).jpeg";
+import room9 from "../assets/room images/images (9).jpeg";
+import room10 from "../assets/room images/images (10).jpeg";
+import room11 from "../assets/room images/images (11).jpeg";
+import room12 from "../assets/room images/images (12).jpeg";
+import room13 from "../assets/room images/images (13).jpeg";
+import room14 from "../assets/room images/images (14).jpeg";
+import room15 from "../assets/room images/images (15).jpeg";
+import room16 from "../assets/room images/images (16).jpeg";
+import room17 from "../assets/room images/images (17).jpeg";
+import room18 from "../assets/room images/images (18).jpeg";
+import room19 from "../assets/room images/images (19).jpeg";
+import room20 from "../assets/room images/images.jpeg";
+import { useRef } from "react";
+
+
+const roomImages = {
+    101: room1,
+    102: room2,
+    103: room3,
+    104: room4,
+    105: room5,
+    106: room7,
+    107: room8,
+    108: room9,
+    109: room10,
+    110: room11,
+    111: room12,
+    112: room13,
+    113: room14,
+    114: room15,
+    115: room16,
+    116: room17,
+    117: room18,
+    118: room19,
+    119: room20,
+};
 
 const Home = () => {
+    const roomsRef = useRef(null);
+    const roomImages = [
+        room1, room2, room3, room4, room5, room7,
+        room8, room9, room10, room11, room12, room13, room14,
+        room15, room16, room17, room18, room19, room20
+    ]
+    const slideRooms = (direction) => {
+        if (roomsRef.current) {
+            roomsRef.current?.scrollBy({
+                left: direction * roomsRef.current.clientWidth * 0.8, behaviour: "smooth",
+            });
+        }
+    }
     return (
         <div className="hotel-home">
 
@@ -27,7 +82,7 @@ const Home = () => {
             {/* Hero Section */}
             <section
                 className="home-hero"
-                // style={{ backgroundImage: `url(${home})` }}
+            // style={{ backgroundImage: `url(${home})` }}
             >
                 <div className="hero-dark-overlay"></div>
 
@@ -147,6 +202,45 @@ const Home = () => {
                 <p>Comfort in every moment. Memories in every stay.</p>
                 <span>© {new Date().getFullYear()} GrandStay Hotel</span>
             </footer>
+
+            <section className="home-rooms">
+                <div className="home-rooms-header">
+                    <h2>Explore Our Rooms</h2>
+
+                    <div className="room-arrows">
+                        <button
+                            type="button"
+                            onClick={() => slideRooms(-1)}
+                            aria-label="Previous rooms"
+                        >
+                            &#8592;
+                        </button>
+                    </div>
+                </div>
+
+                <div className="home-rooms-slider" ref={roomsRef}>
+                    {roomImages.map((image, index) => (
+                        <div className="home-room-card" key={index}>
+                            <img
+                                src={image}
+                                alt={`Hotel room ${index + 1}`}
+                                loading="lazy"
+                                className="w-10 h-10"
+                            />
+                        </div>
+                    ))}
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        onClick={() => slideRooms(1)}
+                        aria-label="Next rooms"
+                    >
+                        &#8594;
+                    </button>
+                </div>
+
+            </section>
 
         </div>
     );

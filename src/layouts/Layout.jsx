@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
                 {children}
             </main>
 
-            <footer className="bg-gray-800 text-white p-4 text-center">
+            <footer className="bg-blue-900 text-white p-4 text-center">
                 <h1 className='font-bold' style={{ fontFamily: "" }}>Apple tree tamilnadu's leading hotels and homes</h1 >
                 2024 Hotel Management System.All rights reserved.
                 < p > contact us: info @appletree.com</p >

@@ -17,6 +17,7 @@ import Adminroom from "./pages/Adminroom";
 import CreateRoom from "./pages/CreateRoom";
 import UpdateRoom from "./pages/UpdateRoom";
 import DeleteRoom from "./pages/DeleteRoom";
+import Payment from "./pages/Payment"
 const routes = [
     {
         path: "/",
@@ -48,7 +49,10 @@ const routes = [
             },
             { path: "CreateRoom", element: <CreateRoom /> },
             { path: "UpdateRoom/:id", element: <UpdateRoom /> },
-            { path: "DeleteRoom/:id", element: <DeleteRoom /> }
+            { path: "DeleteRoom/:id", element: <DeleteRoom /> },
+            {
+                path: "payment", element: <Payment />
+            }
 
         ],
         hydrateFallbackElement: <div>Loading...</div>
