@@ -19,8 +19,8 @@ const bookingServices = {
     deleteBooking: async (id) => {
         return await instance.delete('/book/bookings/' + id)
     },
-    checkRoomAvailability: async (roomId, checkInDate, checkOutDate) => {
-        return await instance.get("/book/availability", { params: { roomId, checkInDate, checkOutDate },});
+    checkRoomAvailability: async (roomId, checkin, checkout) => {
+        return await instance.get("/book/availability", { params: { roomId, checkin, checkout }, });
     },
 
 }

@@ -123,8 +123,16 @@ const Room = () => {
             alert("check-out date must be after check-in date..");
             return;
         }
+        if (checkingAvailability) {
+            alert("Pleae wait while checking room availability..");
+            return;
+        }
         if (isAvailable === false) {
             alert("This room is not available for the selected dates..");
+            return;
+        }
+        if (isAvailable === null) {
+            alert("Room availbility is still being checked. Please try again..");
             return;
         }
         navigate("/payment", {
