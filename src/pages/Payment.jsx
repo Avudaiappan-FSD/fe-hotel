@@ -8,30 +8,62 @@ const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const bookingId =
-        location.state?.bookingId ||
-        new URLSearchParams(location.search).get("bookingId");
-
+    // Details passed from Room.jsx
     const booking = location.state?.booking;
+    const room = location.state?.room || booking?.room;
+
+    const roomId =
+        location.state?.roomId ||
+        (typeof room === "string" ? room : room?._id) ||
+        null;
+
+    const checkin =
+        location.state?.checkin || booking?.checkin || "";
+
+    const checkout =
+        location.state?.checkout || booking?.checkout || "";
+
+    const numberofguests =
+        location.state?.numberofguests ??
+        booking?.numberofguests ??
+        "";
 
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
-    const [messageType, setMessageType] = useState("");
+    const [messageType, setMessageType] = useState("error");
+    const [razorpayLoaded, setRazorpayLoaded] = useState(
+        typeof window !== "undefined" && Boolean(window.Razorpay)
+    );
 
     useEffect(() => {
-        const loadRazorpay = () => {
-            if (window.Razorpay) return Promise.resolve(true);
+        if (window.Razorpay) {
+            setRazorpayLoaded(true);
+            return;
+        }
 
-            return new Promise((resolve) => {
-                const script = document.createElement("script");
-                script.src = "https://checkout.razorpay.com/v1/checkout.js";
-                script.onload = () => resolve(true);
-                script.onerror = () => resolve(false);
-                document.body.appendChild(script);
-            });
+        const existingScript = document.querySelector(
+            'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+        );
+
+        const script = existingScript || document.createElement("script");
+
+        const handleLoad = () => setRazorpayLoaded(true);
+        const handleError = () => setRazorpayLoaded(false);
+
+        script.addEventListener("load", handleLoad);
+        script.addEventListener("error", handleError);
+
+        if (!existingScript) {
+            script.src =
+                "https://checkout.razorpay.com/v1/checkout.js";
+            script.async = true;
+            document.body.appendChild(script);
+        }
+
+        return () => {
+            script.removeEventListener("load", handleLoad);
+            script.removeEventListener("error", handleError);
         };
-
-        loadRazorpay();
     }, []);
 
     const showMessage = (text, type = "error") => {
@@ -40,8 +72,19 @@ const Payment = () => {
     };
 
     const handlePayment = async () => {
-        if (!bookingId) {
-            showMessage("Booking ID missing. Please open payment from your booking.");
+        if (loading) return;
+
+        if (!roomId || !checkin || !checkout || !numberofguests) {
+            showMessage(
+                "Room details are missing. Go back and select your room, dates and guests."
+            );
+            return;
+        }
+
+        if (!razorpayLoaded || !window.Razorpay) {
+            showMessage(
+                "Razorpay is not loaded. Refresh the page and try again."
+            );
             return;
         }
 
@@ -49,24 +92,34 @@ const Payment = () => {
         setMessage("");
 
         try {
-            // Step 1: Create Razorpay order
+            // Step 1: Create Razorpay order.
+            // This request must NOT create a Booking record.
             const orderResponse = await axios.post(
                 `${API_URL}/payment/create-order`,
-                { bookingId },
-                { withCredentials: true }
+                {
+                    roomId,
+                    checkin,
+                    checkout,
+                    numberofguests: Number(numberofguests),
+                },
+                {
+                    withCredentials: true,
+                }
             );
 
             const orderData = orderResponse.data;
 
-            if (!window.Razorpay) {
-                throw new Error("Razorpay checkout failed to load. Refresh and try again.");
+            if (
+                !orderData.orderId ||
+                !orderData.keyId ||
+                !orderData.amount
+            ) {
+                throw new Error(
+                    "Incomplete payment order details received from the server."
+                );
             }
 
-            if (!orderData.orderId || !orderData.keyId) {
-                throw new Error("Order details are incomplete. Please check the backend response.");
-            }
-
-            // Step 2: Open Razorpay checkout
+            // Step 2: Open Razorpay checkout.
             const options = {
                 key: orderData.keyId,
                 amount: orderData.amount,
@@ -75,28 +128,51 @@ const Payment = () => {
                 description: "Hotel Room Booking",
                 order_id: orderData.orderId,
 
-                handler: async function (response) {
+                handler: async (response) => {
                     try {
-                        // Step 3: Verify payment on the backend
+                        // Step 3: Verify payment on the backend.
                         const verifyResponse = await axios.post(
                             `${API_URL}/payment/verify-payment`,
                             {
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature,
+                                razorpay_order_id:
+                                    response.razorpay_order_id,
+                                razorpay_payment_id:
+                                    response.razorpay_payment_id,
+                                razorpay_signature:
+                                    response.razorpay_signature,
                             },
-                            { withCredentials: true }
+                            {
+                                withCredentials: true,
+                            }
                         );
 
-                        showMessage(
-                            verifyResponse.data.message ||
-                            "Payment verified successfully!",
-                            "success"
-                        );
+                        const result = verifyResponse.data;
+
+                        if (result.success && result.booking) {
+                            showMessage(
+                                "Payment verified and booking confirmed!",
+                                "success"
+                            );
+
+                            // Navigate only after backend confirmation.
+                            // Update this route if your app uses a different
+                            // My Bookings route.
+                            navigate("/mybooking", {
+                                replace: true,
+                                state: {
+                                    booking: result.booking,
+                                },
+                            });
+                        } else {
+                            showMessage(
+                                result.message ||
+                                "The server has not confirmed the booking. Check payment and booking status before retrying."
+                            );
+                        }
                     } catch (error) {
                         showMessage(
                             error.response?.data?.message ||
-                            "Payment verification failed. Contact support before retrying."
+                            "Payment verification could not be completed. Check payment status before retrying."
                         );
                     } finally {
                         setLoading(false);
@@ -106,7 +182,9 @@ const Payment = () => {
                 modal: {
                     ondismiss: () => {
                         setLoading(false);
-                        showMessage("Payment window closed. You can try again.");
+                        showMessage(
+                            "Payment window closed. Your booking is not confirmed."
+                        );
                     },
                 },
 
@@ -117,16 +195,19 @@ const Payment = () => {
 
             const razorpay = new window.Razorpay(options);
 
-            razorpay.on("payment.failed", function (response) {
+            razorpay.on("payment.failed", (response) => {
                 setLoading(false);
+
                 showMessage(
-                    response.error?.description || "Payment failed. Please try again."
+                    response.error?.description ||
+                    "Payment failed. Please try again."
                 );
             });
 
             razorpay.open();
         } catch (error) {
             setLoading(false);
+
             showMessage(
                 error.response?.data?.message ||
                 error.message ||
@@ -135,49 +216,63 @@ const Payment = () => {
         }
     };
 
+    const roomName =
+        room?.roomtype ||
+        room?.roomType ||
+        room?.roomnumber ||
+        booking?.roomnumber ||
+        "Selected room";
+
+    const displayDate = (date) => {
+        if (!date) return "—";
+
+        const parsedDate = new Date(date);
+
+        if (Number.isNaN(parsedDate.getTime())) return "—";
+
+        return parsedDate.toLocaleDateString("en-IN");
+    };
+
+    const canPay =
+        Boolean(roomId && checkin && checkout && numberofguests);
+
     return (
         <div style={styles.page}>
             <div style={styles.card}>
                 <div style={styles.icon}>🔒</div>
 
                 <h1 style={styles.title}>Secure Payment</h1>
+
                 <p style={styles.subtitle}>
                     Complete your hotel booking payment securely.
+                    Your booking will be confirmed only after the
+                    server verifies your payment.
                 </p>
 
                 <div style={styles.details}>
                     <div style={styles.row}>
-                        <span style={styles.label}>Booking ID</span>
-                        <span style={styles.value}>
-                            {bookingId || "Not available"}
-                        </span>
-                    </div>
-
-                    <div style={styles.row}>
                         <span style={styles.label}>Room</span>
-                        <span style={styles.value}>
-                            {booking?.room?.roomtype ||
-                                booking?.room?.roomnumber ||
-                                booking?.roomtype ||
-                                "Booking details"}
-                        </span>
+                        <span style={styles.value}>{roomName}</span>
                     </div>
 
                     <div style={styles.row}>
                         <span style={styles.label}>Check-in</span>
                         <span style={styles.value}>
-                            {booking?.checkin
-                                ? new Date(booking.checkin).toLocaleDateString()
-                                : "—"}
+                            {displayDate(checkin)}
                         </span>
                     </div>
 
                     <div style={styles.row}>
                         <span style={styles.label}>Check-out</span>
                         <span style={styles.value}>
-                            {booking?.checkout
-                                ? new Date(booking.checkout).toLocaleDateString()
-                                : "—"}
+                            {displayDate(checkout)}
+                        </span>
+                    </div>
+
+                    <div style={styles.row}>
+                        <span style={styles.label}>Guests</span>
+                        <span style={styles.value}>
+                            {numberofguests || "—"}
                         </span>
                     </div>
                 </div>
@@ -186,14 +281,17 @@ const Payment = () => {
                     <span>Total Amount</span>
                     <strong>
                         {booking?.totalprice != null
-                            ? `₹${Number(booking.totalprice).toLocaleString("en-IN")}`
-                            : "Amount confirmed by server"}
+                            ? `₹${Number(
+                                booking.totalprice
+                            ).toLocaleString("en-IN")}`
+                            : "Calculated securely by server"}
                     </strong>
                 </div>
 
                 {message && (
                     <div
                         role="alert"
+                        aria-live="polite"
                         style={{
                             ...styles.message,
                             ...(messageType === "success"
@@ -205,27 +303,48 @@ const Payment = () => {
                     </div>
                 )}
 
+                {!canPay && (
+                    <p style={styles.warning}>
+                        Booking details are incomplete. Please go back
+                        and select your room and dates again.
+                    </p>
+                )}
+
                 <button
                     type="button"
                     onClick={handlePayment}
-                    disabled={loading || !bookingId}
+                    disabled={loading || !canPay || !razorpayLoaded}
                     style={{
                         ...styles.button,
-                        opacity: loading || !bookingId ? 0.6 : 1,
-                        cursor: loading || !bookingId ? "not-allowed" : "pointer",
+                        opacity:
+                            loading || !canPay || !razorpayLoaded
+                                ? 0.6
+                                : 1,
+                        cursor:
+                            loading || !canPay || !razorpayLoaded
+                                ? "not-allowed"
+                                : "pointer",
                     }}
                 >
-                    {loading ? "Processing..." : "Pay Securely"}
+                    {loading
+                        ? "Processing..."
+                        : !razorpayLoaded
+                            ? "Loading Secure Checkout..."
+                            : "Pay Securely"}
                 </button>
 
                 <p style={styles.note}>
-                    <span>🔐</span> Secure checkout powered by Razorpay
+                    🔐 Secure checkout powered by Razorpay
                 </p>
 
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    style={styles.backButton}
+                    disabled={loading}
+                    style={{
+                        ...styles.backButton,
+                        opacity: loading ? 0.5 : 1,
+                    }}
                 >
                     ← Back
                 </button>
@@ -327,6 +446,14 @@ const styles = {
     error: {
         background: "#fff0f0",
         color: "#a32121",
+    },
+    warning: {
+        background: "#fff8e6",
+        color: "#8a5b00",
+        padding: "12px",
+        borderRadius: "8px",
+        fontSize: "13px",
+        lineHeight: 1.5,
     },
     button: {
         width: "100%",

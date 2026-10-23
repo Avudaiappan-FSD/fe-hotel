@@ -110,39 +110,32 @@ const Room = () => {
     }, [room?._id, checkIn, checkOut])
 
     const handleBooking = async () => {
+        if (!user?._id) {
+            alert("please login before bookingServices.");
+            navigate("/login");
+            return;
+        }
         if (!checkIn || !checkOut) {
-            alert("Please select check-in and check-out dates");
+            alert("Please select chekin and checkout dates..");
             return;
         }
-
         if (new Date(checkOut) <= new Date(checkIn)) {
-            alert("Check-out date must be after check-in date");
+            alert("check-out date must be after check-in date..");
             return;
         }
-        if (isAvailable !== true) {
-            alert("This room is not available for the selected dates");
+        if (isAvailable === false) {
+            alert("This room is not available for the selected dates..");
             return;
         }
-        try {
-            const createBooking = {
-                userId: user?._id,
+        navigate("/payment", {
+            state: {
                 roomId: room._id,
-                numberofguests: room.capacity,
                 checkin: checkIn,
                 checkout: checkOut,
-                totalprice: totalPrice,
-            };
-            const response = await bookingServices.createBooking(createBooking);
-            setIsAvailable(false);
-            console.log("Booking created :", response.data)
-            alert("Room Booked Successfully");
-            setIsBooked(true);
-        } catch (error) {
-            console.log("Booking error:", error.response?.data || error.message);
-            alert("This room is already booked by someone else")
-
-        }
-
+                numberofguests: room.capacity,
+                room: room,
+            }
+        })
     };
 
     return (
@@ -322,7 +315,7 @@ const Room = () => {
                         {user?.role === "customer" || user?.role === "receptionist" ? (
                             <button
                                 onClick={handleBooking}
-                                disabled={!room.isavailable || isBooked}
+                                disabled={checkingAvailability || isBooked}
                                 className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
                             >
                                 {room.isavailable || isBooked ? "Book Now" : "Booked"}
