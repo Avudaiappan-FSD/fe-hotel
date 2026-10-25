@@ -17,8 +17,18 @@ const paymentServices = {
         return await instance.get('/payment/allpayments', data);
     },
     updatePaymentStatus: async (data, id) => {
-        return await instance.put(`/payment/${id}/status` + data, id)
+        return await instance.put(`/payment/${id}/status`, data)
     }
 
 }
 export default paymentServices;
+
+
+
+
+
+
+
+
+
+

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "/api/v1";
+import paymentServices from "../services/paymentServices";
 
 const Payment = () => {
     const location = useLocation();
@@ -94,8 +92,7 @@ const Payment = () => {
         try {
             // Step 1: Create Razorpay order.
             // This request must NOT create a Booking record.
-            const orderResponse = await axios.post(
-                `${API_URL}/payment/create-order`,
+            const orderResponse = await paymentServices.createOrder(
                 {
                     roomId,
                     checkin,
@@ -131,8 +128,7 @@ const Payment = () => {
                 handler: async (response) => {
                     try {
                         // Step 3: Verify payment on the backend.
-                        const verifyResponse = await axios.post(
-                            `${API_URL}/payment/verify-payment`,
+                        const verifyResponse = await paymentServices.verifyPayment(
                             {
                                 razorpay_order_id:
                                     response.razorpay_order_id,
