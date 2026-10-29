@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { setEmail, setPassword, selectEmail, selectPassword } from '../redux/features/auth/loginslice'
 import authServices from '../services/authServices';
-import { replace, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { setUser } from '../redux/features/auth/userslice';
 
 
@@ -25,7 +25,7 @@ const Login = () => {
 
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error.response?.data?.message || error.message);
 
     }
   }
