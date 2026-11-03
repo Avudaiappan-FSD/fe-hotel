@@ -1,4 +1,3 @@
-
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
 import room3 from "../assets/room images/images (3).jpeg";
@@ -202,46 +201,6 @@ const Home = () => {
                 <p>Comfort in every moment. Memories in every stay.</p>
                 <span>© {new Date().getFullYear()} GrandStay Hotel</span>
             </footer>
-
-            <section className="home-rooms">
-                <div className="home-rooms-header">
-                    <h2>Explore Our Rooms</h2>
-
-                    <div className="room-arrows">
-                        <button
-                            type="button"
-                            onClick={() => slideRooms(-1)}
-                            aria-label="Previous rooms"
-                        >
-                            &#8592;
-                        </button>
-                    </div>
-                </div>
-
-                <div className="home-rooms-slider" ref={roomsRef}>
-                    {roomImages.map((image, index) => (
-                        <div className="home-room-card" key={index}>
-                            <img
-                                src={image}
-                                alt={`Hotel room ${index + 1}`}
-                                loading="lazy"
-                                className="w-10 h-10"
-                            />
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    <button
-                        type="button"
-                        onClick={() => slideRooms(1)}
-                        aria-label="Next rooms"
-                    >
-                        &#8594;
-                    </button>
-                </div>
-
-            </section>
-
         </div>
     );
 };
