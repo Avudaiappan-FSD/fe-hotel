@@ -47,6 +47,87 @@
     border-radius: 10px;
 }
 
+.hotel-home {
+    --gold: #d8b47a;
+    --dark: #17211d;
+    --cream: #f7f5f0;
+
+    width: 100%;
+    overflow: hidden;
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.hotel-home * {
+    box-sizing: border-box;
+}
+
+.hotel-home a {
+    text-decoration: none;
+}
+
+/* NAVBAR */
+
+.home-navbar {
+    height: 88px;
+    padding: 0 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    background: #fff;
+    position: relative;
+    z-index: 10;
+}
+
+.home-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--dark);
+    font-family: 'Playfair Display', serif;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+.logo-icon {
+    color: #b38a4b;
+    font-size: 35px;
+}
+
+.logo-highlight {
+    color: #b38a4b;
+}
+
+.home-logo small {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.home-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.home-nav-links a {
+    color: #555c56;
+    font-size: 13px;
+    transition: color 0.3s;
+}
+
+.home-nav-links a:hover,
+.home-nav-links .active-link {
+    color: #b38a4b;
+}
+
 .nav-reserve-btn {
     display: inline-flex;
     align-items: center;
