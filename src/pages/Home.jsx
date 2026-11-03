@@ -1,9 +1,3 @@
-import {
-    useRef
-} from "react";
-
-import { useNavigate } from "react-router-dom";
-
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
 import room3 from "../assets/room images/images (3).jpeg";
@@ -23,27 +17,45 @@ import room17 from "../assets/room images/images (17).jpeg";
 import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
+import { useRef } from "react";
+
+
+const roomImages = {
+    101: room1,
+    102: room2,
+    103: room3,
+    104: room4,
+    105: room5,
+    106: room7,
+    107: room8,
+    108: room9,
+    109: room10,
+    110: room11,
+    111: room12,
+    112: room13,
+    113: room14,
+    114: room15,
+    115: room16,
+    116: room17,
+    117: room18,
+    118: room19,
+    119: room20,
+};
 
 const Home = () => {
     const roomsRef = useRef(null);
-    const navigate = useNavigate();
-
     const roomImages = [
-        room1, room2, room3, room4, room5,
-        room7, room8, room9, room10, room11,
-        room12, room13, room14, room15, room16,
-        room17, room18, room19, room20
-    ];
-
+        room1, room2, room3, room4, room5, room7,
+        room8, room9, room10, room11, room12, room13, room14,
+        room15, room16, room17, room18, room19, room20
+    ]
     const slideRooms = (direction) => {
         if (roomsRef.current) {
-            roomsRef.current.scrollBy({
-                left: direction * 350,
-                behavior: "smooth"
+            roomsRef.current?.scrollBy({
+                left: direction * roomsRef.current.clientWidth * 0.8, behaviour: "smooth",
             });
         }
-    };
-
+    }
     return (
         <div className="hotel-home">
 
@@ -57,17 +69,24 @@ const Home = () => {
                     </span>
                 </div>
 
+
+
                 <div className="home-nav-links">
                     <a href="#experience">Experience</a>
                     <a href="#about">About Us</a>
                 </div>
+
             </nav>
 
             {/* Hero Section */}
-            <section className="home-hero">
+            <section
+                className="home-hero"
+            // style={{ backgroundImage: `url(${home})` }}
+            >
                 <div className="hero-dark-overlay"></div>
 
                 <div className="hero-inner">
+
                     <div className="hero-label">
                         <span></span>
                         WELCOME TO APPLE TREE
@@ -86,6 +105,8 @@ const Home = () => {
                     </p>
 
                     <div className="hero-actions">
+
+
                         <a href="#experience" className="discover-btn">
                             Discover More <span>↗</span>
                         </a>
@@ -113,9 +134,7 @@ const Home = () => {
             {/* Welcome Section */}
             <section className="welcome-section" id="about">
                 <div className="welcome-heading">
-                    <span className="section-label">
-                        THE GRANDSTAY EXPERIENCE
-                    </span>
+                    <span className="section-label">THE GRANDSTAY EXPERIENCE</span>
 
                     <h2>
                         More Than a Stay.
@@ -129,80 +148,6 @@ const Home = () => {
                     every detail is created to make your visit memorable.
                     Relax, recharge and make yourself at home.
                 </p>
-            </section>
-
-            {/* Room Images Carousel */}
-            <section className="home-rooms-section">
-
-                <div className="rooms-heading">
-                    <div>
-                        <span className="section-label">
-                            EXPLORE OUR ROOMS
-                        </span>
-                        <h2>
-                            Find Your Perfect <span>Stay.</span>
-                        </h2>
-                        <p>
-                            Discover comfort and elegance in every room.
-                        </p>
-                    </div>
-
-                    <div className="room-arrows">
-                        <button
-                            className="room-arrow"
-                            onClick={() => slideRooms(-1)}
-                            aria-label="Previous rooms"
-                        >
-                            &#8592;
-                        </button>
-
-                        <button
-                            className="room-arrow"
-                            onClick={() => slideRooms(1)}
-                            aria-label="Next rooms"
-                        >
-                            &#8594;
-                        </button>
-                    </div>
-                </div>
-
-                <div className="rooms-carousel" ref={roomsRef}>
-                    {roomImages.map((image, index) => (
-                        <div
-                            className="home-room-card"
-                            key={index}
-                            onClick={() => navigate("/rooms")}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(event) => {
-                                if (
-                                    event.key === "Enter" ||
-                                    event.key === " "
-                                ) {
-                                    navigate("/rooms");
-                                }
-                            }}
-                        >
-                            <img
-                                src={image}
-                                alt={`Hotel room ${index + 1}`}
-                            />
-
-                            <div className="room-image-overlay">
-                                <span>APPLE TREE HOTEL</span>
-                                <h3>Explore Rooms</h3>
-                                <p>Discover More ↗</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="rooms-view-all">
-                    <button onClick={() => navigate("/rooms")}>
-                        View All Rooms <span>↗</span>
-                    </button>
-                </div>
-
             </section>
 
             {/* Features */}
@@ -226,6 +171,7 @@ const Home = () => {
                         Enjoy thoughtful amenities and comfort throughout
                         your entire visit.
                     </p>
+
                 </div>
 
                 <div className="feature-card">
@@ -244,29 +190,17 @@ const Home = () => {
             {/* Final Booking Banner */}
             <section className="booking-banner">
                 <div>
-                    <span className="section-label">
-                        YOUR NEXT CHAPTER STARTS HERE
-                    </span>
+                    <span className="section-label">YOUR NEXT CHAPTER STARTS HERE</span>
                     <h2>Ready for a Memorable Stay?</h2>
-                    <p>
-                        Find your room and make your next visit special.
-                    </p>
-                    <button onClick={() => navigate("/rooms")}>
-                        Book Your Stay ↗
-                    </button>
+                    <p>Find your room and make your next visit special.</p>
                 </div>
             </section>
 
             {/* Footer */}
             <footer className="home-footer">
-                <p>
-                    Comfort in every moment. Memories in every stay.
-                </p>
-                <span>
-                    © {new Date().getFullYear()} Apple Tree Hotel
-                </span>
+                <p>Comfort in every moment. Memories in every stay.</p>
+                <span>© {new Date().getFullYear()} GrandStay Hotel</span>
             </footer>
-
         </div>
     );
 };

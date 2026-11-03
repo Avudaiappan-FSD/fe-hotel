@@ -1,6 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
 
-/* HOME PAGE */
+/* 
+@theme {
+    --color-primary: #2563EB;
+    --color-secondary: #FBBF24;
+} */
+
+* {
+    font-family: Outfit;
+}
+
+.font-playfair {
+    font-family: Playfair;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.edit-btn {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.edit-btn img {
+    width: 22px;
+    height: 22px;
+}
+
+.room-card img {
+    width: 250px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
 
 .hotel-home {
     --gold: #d8b47a;
@@ -83,6 +128,22 @@
     color: #b38a4b;
 }
 
+.nav-reserve-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--dark);
+    color: white;
+    padding: 15px 20px;
+    font-size: 12px;
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+.nav-reserve-btn:hover {
+    background: #b38a4b;
+}
+
 /* HERO */
 
 .home-hero {
@@ -101,7 +162,8 @@
 .hero-dark-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg,
+    background:
+        linear-gradient(90deg,
             rgba(12, 20, 16, 0.87) 0%,
             rgba(12, 20, 16, 0.65) 42%,
             rgba(12, 20, 16, 0.15) 100%);
@@ -161,6 +223,7 @@
     gap: 15px;
 }
 
+.explore-btn,
 .discover-btn {
     min-height: 54px;
     display: inline-flex;
@@ -171,6 +234,19 @@
     font-size: 12px;
     font-weight: 600;
     transition: 0.3s;
+}
+
+.explore-btn {
+    background: var(--gold);
+    color: #17211d;
+}
+
+.explore-btn:hover {
+    background: #f0d09c;
+    transform: translateY(-2px);
+}
+
+.discover-btn {
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.55);
 }
@@ -335,79 +411,6 @@
     font-weight: 700;
 }
 
-/* ROOM IMAGE CAROUSEL */
-
-.home-rooms {
-    padding: 75px 7%;
-    background: #f7f5f0;
-    overflow: hidden;
-}
-
-.rooms-heading {
-    text-align: center;
-    margin-bottom: 35px;
-}
-
-.rooms-heading h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(30px, 4vw, 45px);
-    font-weight: 500;
-    margin: 0;
-}
-
-.rooms-slider-wrapper {
-    position: relative;
-}
-
-.rooms-slider {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-}
-
-.rooms-slider::-webkit-scrollbar {
-    display: none;
-}
-
-.home-room-image {
-    flex: 0 0 280px;
-    height: 210px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.room-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    background: white;
-    color: #17211d;
-    font-size: 25px;
-    cursor: pointer;
-    z-index: 2;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-    transition: 0.3s;
-}
-
-.room-arrow:hover {
-    background: #b38a4b;
-    color: white;
-}
-
-.room-arrow-left {
-    left: -20px;
-}
-
-.room-arrow-right {
-    right: -20px;
-}
-
 /* BOOKING BANNER */
 
 .booking-banner {
@@ -434,6 +437,22 @@
     color: #666c64;
 }
 
+.banner-btn {
+    flex-shrink: 0;
+    padding: 18px 25px;
+    display: inline-flex;
+    gap: 20px;
+    align-items: center;
+    background: var(--dark);
+    color: white;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.banner-btn:hover {
+    background: #a37b42;
+}
+
 /* FOOTER */
 
 .home-footer {
@@ -445,6 +464,14 @@
     gap: 15px;
     background: #17211d;
     color: white;
+}
+
+.footer-logo {
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    font-weight: 700;
 }
 
 .home-footer p,
@@ -470,6 +497,11 @@
 
     .home-logo {
         font-size: 19px;
+    }
+
+    .nav-reserve-btn {
+        padding: 13px;
+        gap: 10px;
     }
 
     .welcome-section {
@@ -513,6 +545,11 @@
 
     .home-nav-links a {
         font-size: 11px;
+    }
+
+    .nav-reserve-btn {
+        font-size: 11px;
+        padding: 12px;
     }
 
     .home-hero {
@@ -587,26 +624,8 @@
         gap: 16px;
     }
 
-    .home-rooms {
-        padding: 60px 6%;
-    }
-
-    .home-room-image {
-        flex-basis: 240px;
-        height: 180px;
-    }
-
-    .room-arrow {
-        width: 38px;
-        height: 38px;
-    }
-
-    .room-arrow-left {
-        left: -10px;
-    }
-
-    .room-arrow-right {
-        right: -10px;
+    .feature-card {
+        min-height: auto;
     }
 
     .booking-banner {
@@ -625,5 +644,11 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+
+    .home-rooms {
+        padding: 60px 6%;
+        background: #f7f5f0;
+        overflow: hidden;
     }
 }
