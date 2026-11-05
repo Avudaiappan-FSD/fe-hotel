@@ -43,17 +43,20 @@ const Layout = ({ children }) => {
                 {children}
             </main>
 
-            <footer className="bg-blue-900 text-white p-4 text-center">
-                <h1 className='font-bold' style={{ fontFamily: "" }}>Apple tree tamilnadu's leading hotels and homes</h1 >
-                2024 Hotel Management System.All rights reserved.
-                < p > contact us: info @appletree.com</p >
+            <footer className="mt-auto bg-[#17211d] text-[#f7f5f0] px-6 py-8 text-center">
+                <h1 className='font-bold text-lg mb-3'>Apple tree tamilnadu's leading hotels and homes</h1 >
+                <p className='text-sm text-gray-300 mb-2'> 2024 Hotel Management System.All rights reserved.</p>
+                < p className='text-sm text-gray-300 mb-2'> contact us: info @appletree.com</p >
                 <img src={phone} alt="Logo" className="inline-block h-8 w-8 ml-2" />0462 - 9887634211
-                < p > mail: info @appletree @gmail.com</p >
-                <img src={insta} alt="Logo" className="inline-block h-8 w-8 ml-2" />
-                <img src={fb} alt="Logo" className="inline-block h-8 w-8 ml-2" />
-                <img src={twitter} alt="Logo" className="inline-block h-8 w-8 ml-2" />
-                <img src={pinterest} alt="Logo" className="inline-block h-8 w-8 ml-2" />
-                <img src={youtube} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                < p className='text-sm text-gray-300 mb-2'> mail: info @appletree @gmail.com</p >
+                <div className='flex justify-center gap-5 mt-5'>
+                    <img src={insta} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                    <img src={fb} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                    <img src={twitter} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                    <img src={pinterest} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                    <img src={youtube} alt="Logo" className="inline-block h-8 w-8 ml-2" />
+                </div>
+
             </footer >
 
         </div >
