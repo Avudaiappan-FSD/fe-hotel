@@ -1,6 +1,5 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -21,7 +20,6 @@ import room17 from "../assets/room images/images (17).jpeg";
 import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
-
 
 const roomImages = {
   101: room1,
@@ -45,266 +43,419 @@ const roomImages = {
   119: room20,
 };
 
-
 const RoomList = () => {
   const navigate = useNavigate();
-  const rooms = useLoaderData();
-  // Search state
+  const rooms = useLoaderData() || [];
+
+  // Search and filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedGuests, setSelectedGuests] = useState("");
-  const [availableOnly, setAvailableOnly] = useState("false");
-  const [showFilters, setShowFilters] = useState("false");
+  const [availableOnly, setAvailableOnly] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
-  // Filtered rooms
-  const [filteredRooms, setFilteredRooms] = useState(rooms || []);
-
-  //selected roomtypes
   const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
-  const applyFilters = (types, searchValue, min, max, guests, available) => {
-    const search = searchValue.trim().toLowerCase();
-    const result = (rooms || []).filter((room) => {
-      const roomNumber =
-        room.roomnumber?.toString().toLowerCase() || "";
-      const roomType =
-        room.roomtype?.toString().toLowerCase() || "";
-      const location =
-        room.location?.toString().toLowerCase() || "";
-      const description =
-        room.description?.toString().toLowerCase() || "";
-      const matchesSearch = search === "" || roomNumber.includes(search) || roomType.includes(search) || location.includes(search) || description.includes(search);
-      const matchesRoomType = types.length === 0 || types.some((type) => String(type).trim().toLowerCase() === roomType);
-      const matchesPrice = (min === "" || room.price >= parseFloat(min)) && (max === "" || room.price <= parseFloat(max));
-      const capacity = Number(room.capacity || 0);
-      const matchesGuests = guests === "" || capacity >= Number(guests);
-      const matchesAvailability = !available || room.isavailable === true || room.isavailable === "true";
-      return matchesRoomType && matchesSearch && matchesPrice && matchesGuests && matchesAvailability;
-    });
-    setFilteredRooms(result);
-  };
 
+  // Apply all filters
+  const filteredRooms = rooms.filter((room) => {
+    const search = searchTerm.trim().toLowerCase();
+
+    const roomNumber = String(room.roomnumber || "").toLowerCase();
+    const roomType = String(room.roomtype || "").toLowerCase();
+    const location = String(room.location || "").toLowerCase();
+    const description = String(room.description || "").toLowerCase();
+
+    const matchesSearch =
+      search === "" ||
+      roomNumber.includes(search) ||
+      roomType.includes(search) ||
+      location.includes(search) ||
+      description.includes(search);
+
+    const matchesRoomType =
+      selectedRoomTypes.length === 0 ||
+      selectedRoomTypes.some(
+        (type) => type.toLowerCase() === roomType
+      );
+
+    const price = Number(room.price || 0);
+
+    const matchesPrice =
+      (minPrice === "" || price >= Number(minPrice)) &&
+      (maxPrice === "" || price <= Number(maxPrice));
+
+    const capacity = Number(room.capacity || 0);
+
+    const matchesGuests =
+      selectedGuests === "" ||
+      (selectedGuests === "3+"
+        ? capacity >= 3
+        : capacity >= Number(selectedGuests));
+
+    const matchesAvailability =
+      !availableOnly ||
+      room.isavailable === true ||
+      room.isavailable === "true";
+
+    return (
+      matchesSearch &&
+      matchesRoomType &&
+      matchesPrice &&
+      matchesGuests &&
+      matchesAvailability
+    );
+  });
+
+  // Room type selection
   const handleRoomTypeChange = (type) => {
-    setFilteredRooms((prev) => {
-      let updatedTypes;
-      if (prev.includes(type)) {
-        updatedTypes = prev.filter((t) => t !== type);
-      } else {
-        updatedTypes = [...prev, type];
-      }
-      applyFilters(updatedTypes, searchTerm, minPrice, maxPrice, selectedGuests);
-      return updatedTypes;
-    });
+    setSelectedRoomTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((item) => item !== type)
+        : [...prev, type]
+    );
   };
 
-  const roomfilteredRooms = filteredRooms
-
-  // Search function
-  const handleSearch = () => {
-    applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, selectedGuests);
-  };
-
-
-  // Reset search
+  // Reset filters
   const handleReset = () => {
     setSearchTerm("");
-    setFilteredRooms(rooms || []);
+    setMinPrice("");
+    setMaxPrice("");
+    setSelectedGuests("");
+    setAvailableOnly(false);
+    setSelectedRoomTypes([]);
+    setShowFilters(false);
   };
 
-
   return (
+    <div className="min-h-screen py-12 px-4 md:px-8 bg-[#f7f5f0]">
 
-    <div className="min-h-screen py-10">
+      {/* HEADER */}
+      <div className="max-w-7xl mx-auto text-center mb-12">
 
-      {/* ================= HEADER ================= */}
-
-      <div className="max-w-7xl mx-auto text-center mb-10 px-4">
-
-        <p className="text-blue-600 font-semibold uppercase tracking-widest">
+        <p className="text-[#a37b42] font-bold uppercase tracking-[4px] text-xs">
           Welcome to Apple Tree
         </p>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mt-2">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#17211d] mt-3">
           Find Your Perfect Room
         </h1>
 
-        <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
-          Choose from our comfortable and beautifully designed rooms
-          for a relaxing and memorable stay.
+        <p className="text-gray-500 mt-4 max-w-2xl mx-auto leading-7">
+          Choose from our comfortable and beautifully designed
+          rooms for a relaxing and memorable stay.
         </p>
 
-        {/*=============== sidebar ===================*/}
+      </div>
+
+      {/* MOBILE FILTER BUTTON */}
+      <div className="lg:hidden max-w-7xl mx-auto mb-5">
+
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="w-full bg-[#17211d] text-white py-3 rounded-xl font-semibold"
+        >
+          {showFilters ? "Close Filters −" : "Show Filters +"}
+        </button>
 
       </div>
-      <div className="flex gap-6 items-stretch">
-        <div className="w-64 shrink-0 sticky top-24 self-start hidden lg:block">
-          <div className="bg-white rounded-2xl shadow-md p-6 h-full">
-            <h2 className="text-xl font-bold mb-5">Room Filters</h2>
 
+      {/* MAIN CONTENT */}
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+
+        {/* FILTER SIDEBAR */}
+        <aside
+          className={`w-full lg:w-72 shrink-0 ${showFilters ? "block" : "hidden lg:block"
+            }`}
+        >
+
+          <div className="bg-white rounded-2xl border border-[#e8e3d9]
+                    shadow-sm p-6 lg:sticky lg:top-24">
+
+            <div className="flex justify-between items-center mb-6">
+
+              <h2 className="text-xl font-bold text-[#17211d]">
+                Room Filters
+              </h2>
+
+              <button
+                onClick={handleReset}
+                className="text-xs font-semibold text-[#a37b42] hover:underline"
+              >
+                Clear All
+              </button>
+
+            </div>
+
+            {/* SEARCH */}
             <input
               type="text"
               placeholder="Search rooms..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              className="w-full border rounded-lg p-2 mb-5" />
-            <h3 className="font-semibold mb-2">Room Type</h3>
-            <div className="space-y-2">
-              <label className="block">
-                <input type="checkbox"
-                  name="roomtype"
-                  checked={selectedRoomTypes.includes("Single Room")}
-                  onChange={() => handleRoomTypeChange("Single Room")}
-                /> Single Room
-              </label>
-              <label className="block">
-                <input type="checkbox"
-                  name="roomtype"
-                  checked={selectedRoomTypes.includes("Double Room")}
-                  onChange={() => handleRoomTypeChange("Double Room")}
-                /> Double Room
-              </label>
-              <label className="block">
-                <input type="checkbox"
-                  name="roomtype"
-                  checked={selectedRoomTypes.includes("Deluxe Room")}
-                  onChange={() => handleRoomTypeChange("Deluxe Room")}
-                /> Deluxe Room
-              </label>
-              <br></br>
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-700 mb-3">Price Range</h3>
-                <div className="flex gap-2">
-                  <input type="number" placeholder="Min" className="w-1/2 border rounded-lg px-3 py-2 outline-none" value={minPrice} onChange={(e) => {
-                    const value = e.target.value;
-                    setMinPrice(value); applyFilters(selectedRoomTypes, searchTerm, value, maxPrice);
-                  }} />
-                  <input type="number" placeholder="max" className="w-1/2 border rounded-lg px-3 py-2 outline-none" value={maxPrice} onChange={(e) => {
-                    const value = e.target.value;
-                    setMaxPrice(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, value);
-                  }} />
-                </div>
-                <br></br>
-                <div className="mb-6">
-                  <h3 className="font-semibold text-gray-700 mb-3">Guests</h3>
-                  <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests" value="1" checked={selectedGuests === "1"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
-                    <span>1 Guest</span>
+              className="w-full border border-gray-200 rounded-lg
+                            px-4 py-3 mb-7 outline-none
+                            focus:border-[#a37b42] transition"
+            />
+
+            {/* ROOM TYPE */}
+            <h3 className="font-bold text-[#17211d] mb-4">
+              Room Type
+            </h3>
+
+            <div className="space-y-3 mb-7">
+
+              {["Single Room", "Double Room", "Deluxe Room"].map(
+                (type) => (
+                  <label
+                    key={type}
+                    className="flex items-center gap-3 text-sm
+                                        text-gray-600 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedRoomTypes.includes(type)}
+                      onChange={() => handleRoomTypeChange(type)}
+                      className="accent-[#a37b42] w-4 h-4"
+                    />
+
+                    {type}
                   </label>
-                  <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests" value="2" checked={selectedGuests === "2"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
-                    <span>2 Guests</span>
-                  </label>
-                  <label className="flex items-center gap-2 mb-2">
-                    <input type="radio" name="guests" value="3+" checked={selectedGuests === "3+"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
-                    <span>3+ Guests</span>
-                  </label>
-                  <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg" onClick={() => setShowFilters(!showFilters)}>{showFilters ? "Close Filters" : "Rooms Filters"}
-                  </button>
-                </div>
-              </div>
+                )
+              )}
+
             </div>
+
+            <div className="border-t border-gray-100 my-6"></div>
+
+            {/* PRICE RANGE */}
+            <h3 className="font-bold text-[#17211d] mb-4">
+              Price Range
+            </h3>
+
+            <div className="flex gap-3 mb-7">
+
+              <input
+                type="number"
+                min="0"
+                placeholder="Min ₹"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="w-1/2 min-w-0 border border-gray-200
+                                rounded-lg px-3 py-3 text-sm outline-none
+                                focus:border-[#a37b42]"
+              />
+
+              <input
+                type="number"
+                min="0"
+                placeholder="Max ₹"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-1/2 min-w-0 border border-gray-200
+                                rounded-lg px-3 py-3 text-sm outline-none
+                                focus:border-[#a37b42]"
+              />
+
+            </div>
+
+            <div className="border-t border-gray-100 my-6"></div>
+
+            {/* GUESTS */}
+            <h3 className="font-bold text-[#17211d] mb-4">
+              Guests
+            </h3>
+
+            <div className="space-y-3 mb-7">
+
+              {[
+                { label: "1 Guest", value: "1" },
+                { label: "2 Guests", value: "2" },
+                { label: "3+ Guests", value: "3+" },
+              ].map((guest) => (
+                <label
+                  key={guest.value}
+                  className="flex items-center gap-3 text-sm
+                                    text-gray-600 cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="guests"
+                    value={guest.value}
+                    checked={selectedGuests === guest.value}
+                    onChange={(e) =>
+                      setSelectedGuests(e.target.value)
+                    }
+                    className="accent-[#a37b42] w-4 h-4"
+                  />
+
+                  {guest.label}
+                </label>
+              ))}
+
+              <button
+                onClick={() => setSelectedGuests("")}
+                className="text-xs text-[#a37b42] font-semibold hover:underline"
+              >
+                Clear guest selection
+              </button>
+
+            </div>
+
+            <div className="border-t border-gray-100 my-6"></div>
+
+            {/* AVAILABILITY */}
+            <label className="flex items-center gap-3 text-sm
+                        font-semibold text-[#17211d] cursor-pointer">
+
+              <input
+                type="checkbox"
+                checked={availableOnly}
+                onChange={(e) => setAvailableOnly(e.target.checked)}
+                className="accent-[#a37b42] w-4 h-4"
+              />
+
+              Show available rooms only
+
+            </label>
+
           </div>
-        </div>
 
-        {/* ================= ROOM CARDS ================= */}
+        </aside>
 
-        <div
+        {/* ROOM CARDS */}
+        <div className="flex-1 min-w-0 space-y-7">
 
-          className="flex-1 min-w-0 space-y-6 "
-        >
-          {roomfilteredRooms?.map((room) => (
+          {/* RESULTS COUNT */}
+          <div className="flex justify-between items-center">
+
+            <p className="text-sm text-gray-500">
+              Showing{" "}
+              <span className="font-bold text-[#17211d]">
+                {filteredRooms.length}
+              </span>{" "}
+              rooms
+            </p>
+
+          </div>
+
+          {filteredRooms.map((room) => (
+
             <div
               key={room._id}
               onClick={() => navigate(`/rooms/${room._id}`)}
-              className="bg-white rounded-2xl overflow-hidden shadow-md flex flex-row md:flex-row hover:shadow-2xl transition duration-300 cursor-pointer"
+              className="group bg-white border border-[#e8e3d9]
+                            rounded-2xl overflow-hidden flex flex-col md:flex-row
+                            shadow-sm hover:shadow-xl hover:-translate-y-1
+                            transition-all duration-300 cursor-pointer"
             >
 
-              {/* ================= IMAGE ================= */}
-              <div className="relative w-full md:w-1/2 h-64 md:h-auto">
+              {/* ROOM IMAGE */}
+              <div className="relative w-full md:w-[48%]
+                            h-64 md:min-h-[320px] overflow-hidden">
 
                 <img
                   src={roomImages[room.roomnumber]}
                   alt={`Room ${room.roomnumber}`}
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="w-full h-full object-cover
+                                    group-hover:scale-105 transition-transform duration-500"
                 />
 
-                {/* Room Number */}
+                {/* ROOM NUMBER */}
                 <div className="absolute bottom-4 left-4">
-                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg font-semibold">
+
+                  <span className="bg-[#17211d]/90 text-white
+                                    px-4 py-2 rounded-lg text-sm font-semibold shadow-md">
                     Room {room.roomnumber}
                   </span>
+
                 </div>
 
-                {/* Availability */}
+                {/* AVAILABILITY */}
                 <div className="absolute top-4 right-4">
-                  {room.isavailable ? (
-                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+
+                  {room.isavailable === true ||
+                    room.isavailable === "true" ? (
+
+                    <span className="bg-[#287a55] text-white
+                                        px-4 py-2 rounded-full text-xs font-semibold shadow-md">
                       Available
                     </span>
+
                   ) : (
-                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+
+                    <span className="bg-[#a94442] text-white
+                                        px-4 py-2 rounded-full text-xs font-semibold shadow-md">
                       Not Available
                     </span>
+
                   )}
+
                 </div>
 
               </div>
 
-
-              {/* ================= ROOM DETAILS ================= */}
-              <div className="w-1/2 p-6 flex flex-col justify-between">
+              {/* ROOM DETAILS */}
+              <div className="flex-1 min-w-0 p-5 md:p-7
+                            flex flex-col justify-between">
 
                 <div>
 
-                  {/* Room Type + Price */}
-                  <div className="flex justify-between items-start gap-4">
+                  {/* ROOM TYPE AND PRICE */}
+                  <div className="flex justify-between
+                                    items-start gap-3">
 
                     <div>
-                      <p className="text-sm text-blue-600 font-semibold uppercase">
+
+                      <p className="text-xs tracking-widest
+                                            uppercase font-bold text-[#a37b42]">
                         {room.roomtype}
                       </p>
 
-                      <h2 className="text-2xl font-bold text-gray-800 mt-1">
+                      <h2 className="text-2xl font-bold
+                                            text-[#17211d] mt-2">
                         Room {room.roomnumber}
                       </h2>
+
                     </div>
 
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-blue-600">
+                    <div className="text-right shrink-0">
+
+                      <p className="text-2xl font-bold
+                                            text-[#a37b42]">
                         ₹{room.price}
                       </p>
 
-                      <p className="text-sm text-gray-500">
-                        / night
+                      <p className="text-xs text-gray-500 mt-1">
+                        Per night
                       </p>
+
                     </div>
 
                   </div>
 
-
-                  {/* Location */}
-                  <p className="text-gray-500 mt-3">
+                  {/* LOCATION */}
+                  <p className="text-sm text-gray-500 mt-4">
                     📍 {room.location}
                   </p>
 
-
-                  {/* Description */}
+                  {/* DESCRIPTION */}
                   <div className="mt-5">
 
-                    <h3 className="font-semibold text-gray-800 mb-2">
+                    <h3 className="text-sm font-bold
+                                        text-[#17211d] mb-2">
                       About this room
                     </h3>
 
-                    <p className="text-gray-600 text-sm leading-6">
+                    <p className="text-sm text-gray-600 leading-7">
                       {room.description}
                     </p>
 
                   </div>
 
-
-                  {/* Capacity + Room Type */}
-                  <div className="flex gap-6 mt-5 text-sm text-gray-600">
+                  {/* CAPACITY */}
+                  <div className="flex flex-wrap gap-x-6
+                                    gap-y-3 mt-5 text-sm text-gray-600">
 
                     <span>
                       👤 {room.capacity} Guests
@@ -318,56 +469,56 @@ const RoomList = () => {
 
                 </div>
 
-
-                {/* ================= BOOK BUTTON ================= */}
+                {/* VIEW ROOM BUTTON */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/rooms/${room._id}`);
                   }}
-                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+                  className="w-full mt-7 py-3.5 px-5
+                                    bg-[#17211d] text-white rounded-lg
+                                    font-semibold text-sm tracking-wide
+                                    hover:bg-[#a37b42] hover:text-white
+                                    transition-all duration-300
+                                    shadow-sm hover:shadow-md"
                 >
-                  View Room
+                  View Room <span className="ml-2">→</span>
                 </button>
 
               </div>
 
             </div>
+
           ))}
 
+          {/* NO ROOMS */}
+          {filteredRooms.length === 0 && (
 
-          {/* ================= NO ROOMS ================= */}
+            <div className="bg-white border border-[#e8e3d9]
+                        rounded-2xl text-center py-20 px-5">
 
-          {(!roomfilteredRooms || roomfilteredRooms.length === 0) && (
+              <div className="text-5xl mb-5">⌂</div>
 
-            <div className="text-center py-20">
-
-              <h2 className="text-2xl font-bold text-gray-800">
-                No rooms found
+              <h2 className="text-2xl font-bold text-[#17211d]">
+                No Rooms Found
               </h2>
-
-              <p className="text-gray-500 mt-2">
-                Try searching with another room number, room type or location.
-              </p>
-
+              <p className="text-gray-500 mt-3">Try adjusting your search or filter criteria</p>
               <button
                 onClick={handleReset}
-                className="mt-5 bg-blue-600 text-white 
-                       px-6 py-3 rounded-lg hover:bg-blue-700"
+                className="mt-6 bg-[#17211d] text-white
+                px-7 py-3 rounded-lg font-semibold
+                hover:bg-[#a37b42] transition"
               >
                 Show All Rooms
               </button>
-
             </div>
 
           )}
-
         </div>
+
       </div>
     </div>
   );
-
 };
-
 
 export default RoomList;
