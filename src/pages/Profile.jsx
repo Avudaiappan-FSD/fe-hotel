@@ -194,12 +194,6 @@ const Profile = () => {
                                         Profile Details
                                     </h2>
                                 </div>
-
-                                <img
-                                    src={edit}
-                                    alt="Edit profile"
-                                    className="w-8 h-8 object-contain"
-                                />
                             </div>
 
                             {message && (
