@@ -320,7 +320,7 @@ const Room = () => {
                             </div>
                         )}
                         {/* Booking Button */}
-                        {user?.role === "customer" || user?.role === "receptionist" ? (
+                        {user?.role === "customer" (
                             <button
                                 onClick={handleBooking}
                                 disabled={checkingAvailability || isBooked}
