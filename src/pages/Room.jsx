@@ -319,21 +319,33 @@ const Room = () => {
 
                             </div>
                         )}
-                        {/* Booking Button */}
-                        {user?.role === "customer"} (
-                        <button
-                            onClick={handleBooking}
-                            disabled={checkingAvailability || isBooked}
-                            className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
-                        >
-                            {room.isavailable || isBooked ? "Book Now" : "Booked"}
-                        </button>) : (
-                        <div>
-                            <button className="mt-6 w-min-0 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-20" onClick={() => navigate(`/updateroom/${room._id}`)}>Update Room</button>
-                            <button className="mt-6 w-min-0 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition-duration-200 bg-blue-600 rounded cursor-pointer px-10 mx-70 ml-70" onClick={() => navigate(`/deleteroom/${room._id}`)}>Delete Room</button>
-                        </div>
-                        )
+                        {/* Role Based Buttons */}
 
+                        {user?.role === "customer" ? (
+                            <button
+                                onClick={handleBooking}
+                                disabled={checkingAvailability || isBooked || !room.isavailable}
+                                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
+                            >
+                                {isBooked || !room.isavailable ? "Booked" : "Book Now"}
+                            </button>
+                        ) : user?.role === "admin" || user?.role === "receptionist" ? (
+                            <div className="flex flex-wrap gap-4 mt-6">
+                                <button
+                                    onClick={() => navigate(`/updateroom/${room._id}`)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl transition duration-200"
+                                >
+                                    Update Room
+                                </button>
+
+                                <button
+                                    onClick={() => navigate(`/deleteroom/${room._id}`)}
+                                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition duration-200"
+                                >
+                                    Delete Room
+                                </button>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
 
