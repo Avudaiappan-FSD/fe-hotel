@@ -199,13 +199,6 @@ const RoomList = () => {
                     <input type="radio" name="guests" value="3+" checked={selectedGuests === "3+"} onChange={(e) => { const value = e.target.value; setSelectedGuests(value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, value); }} />
                     <span>3+ Guests</span>
                   </label>
-                  <div className="mb-6">
-                    <h3 className="font-semibold text-gray-700 mb-3">Availability</h3>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" checked={availableOnly} onChange={(e) => { const value = e.target.checked; setAvailableOnly(e.target.value); applyFilters(selectedRoomTypes, searchTerm, minPrice, maxPrice, selectedGuests, value) }} />
-                      <span>Available only</span>
-                    </label>
-                  </div>
                   <button className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg" onClick={() => setShowFilters(!showFilters)}>{showFilters ? "Close Filters" : "Rooms Filters"}
                   </button>
                 </div>
