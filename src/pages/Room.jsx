@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { data, useLoaderData } from "react-router-dom";
-import bookingServices from "../services/bookingServices";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import bookingServices from "../services/bookingServices";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -23,7 +22,6 @@ import room17 from "../assets/room images/images (17).jpeg";
 import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
-
 
 const roomImages = {
     101: room1,
@@ -47,94 +45,163 @@ const roomImages = {
     119: room20,
 };
 
+const getLocalDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+};
+
 const Room = () => {
-    const [isBooked, setIsBooked] = useState(false);
-    const [isAvailable, setIsAvailable] = useState(null);
-    const [checkingAvailability, setcheckingAvailability] = useState(false);
     const room = useLoaderData();
     const user = useSelector((state) => state.user?.user);
-    console.log(user);
     const navigate = useNavigate();
 
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
+    const [isAvailable, setIsAvailable] = useState(null);
+    const [checkingAvailability, setCheckingAvailability] = useState(false);
+
+    const today = getLocalDate();
+
+    // Check room availability
+    useEffect(() => {
+        let active = true;
+
+        const checkAvailability = async () => {
+            if (!room?._id || !checkIn || !checkOut) {
+                setIsAvailable(null);
+                setCheckingAvailability(false);
+                return;
+            }
+
+            if (checkIn < today || checkOut <= checkIn) {
+                setIsAvailable(null);
+                setCheckingAvailability(false);
+                return;
+            }
+
+            try {
+                setCheckingAvailability(true);
+
+                const response =
+                    await bookingServices.checkRoomAvailability(
+                        room._id,
+                        checkIn,
+                        checkOut
+                    );
+
+                if (active) {
+                    setIsAvailable(response.data.available);
+                }
+            } catch (error) {
+                console.error(
+                    "Availability error:",
+                    error.response?.data?.message || error.message
+                );
+
+                if (active) {
+                    setIsAvailable(null);
+                }
+            } finally {
+                if (active) {
+                    setCheckingAvailability(false);
+                }
+            }
+        };
+
+        checkAvailability();
+
+        return () => {
+            active = false;
+        };
+    }, [room?._id, checkIn, checkOut]);
 
     if (!room) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <h2 className="text-xl font-semibold">Room not found</h2>
+            <div className="min-h-screen flex items-center justify-center bg-[#f7f5f0]">
+                <div className="text-center">
+                    <h2 className="text-2xl font-semibold text-[#26352d]">
+                        Room Not Found
+                    </h2>
+                    <p className="text-gray-500 mt-2">
+                        The room you are looking for is unavailable.
+                    </p>
+                    <button
+                        onClick={() => navigate("/rooms")}
+                        className="mt-5 px-6 py-3 bg-[#26352d] text-white rounded-lg"
+                    >
+                        Back to Rooms
+                    </button>
+                </div>
             </div>
         );
     }
 
     const image = roomImages[room.roomnumber];
 
-    // Calculate number of nights
-    let nights = 0;
+    const nights =
+        checkIn && checkOut && checkOut > checkIn
+            ? Math.round(
+                (Date.parse(checkOut) - Date.parse(checkIn)) /
+                (1000 * 60 * 60 * 24)
+            )
+            : 0;
 
-    if (checkIn && checkOut) {
-        const start = new Date(checkIn);
-        const end = new Date(checkOut);
+    const totalPrice = nights * Number(room.price);
 
-        const difference = end - start;
-        nights = difference / (1000 * 60 * 60 * 24);
+    const isCustomer = user?.role === "customer";
 
-        if (nights < 0) {
-            nights = 0;
-        }
-    }
+    const isManager = ["admin", "receptionist"].includes(user?.role);
 
-    const totalPrice = nights * room.price;
-    const checkRoomAvailability = async () => {
-        if (!room?._id || !checkIn || !checkOut) {
-            setIsAvailable(null);
-            return;
-        }
-        if (new Date(checkOut) <= new Date(checkIn)) {
-            setIsAvailable(null);
-            return;
-        }
-        try {
-            setcheckingAvailability(true);
-            const response = await bookingServices.checkRoomAvailability(room._id, checkIn, checkOut);
-            setIsAvailable(response.data.available);
-        } catch (error) {
-            console.log("Availability error:", error.response?.data.message);
-            setIsAvailable(null)
-        } finally {
-            setcheckingAvailability(false)
-        }
-    }
-    useEffect(() => {
-        checkRoomAvailability();
-    }, [room?._id, checkIn, checkOut])
+    const roomUnavailable = room.isavailable === false;
+
+    const unavailableForDates = isAvailable === false;
 
     const handleBooking = async () => {
         if (!user?._id) {
-            alert("please login before bookingServices.");
+            alert("Please login before booking.");
             navigate("/login");
             return;
         }
+
         if (!checkIn || !checkOut) {
-            alert("Please select chekin and checkout dates..");
+            alert("Please select check-in and check-out dates.");
             return;
         }
-        if (new Date(checkOut) <= new Date(checkIn)) {
-            alert("check-out date must be after check-in date..");
+
+        if (checkIn < today) {
+            alert("Check-in date cannot be in the past.");
             return;
         }
+
+        if (checkOut <= checkIn) {
+            alert("Check-out date must be after check-in date.");
+            return;
+        }
+
+        if (roomUnavailable) {
+            alert("This room is currently unavailable.");
+            return;
+        }
+
         if (checkingAvailability) {
-            alert("Pleae wait while checking room availability..");
+            alert("Please wait while checking room availability.");
             return;
         }
+
         if (isAvailable === false) {
-            alert("This room is not available for the selected dates..");
+            alert("This room is not available for the selected dates.");
             return;
         }
+
         if (isAvailable === null) {
-            alert("Room availbility is still being checked. Please try again..");
+            alert("Room availability is still being checked. Please try again.");
             return;
         }
+
         navigate("/payment", {
             state: {
                 roomId: room._id,
@@ -142,215 +209,391 @@ const Room = () => {
                 checkout: checkOut,
                 numberofguests: room.capacity,
                 room: room,
-            }
-        })
+            },
+        });
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#f5f3ee] py-8 sm:py-12 px-4 sm:px-6">
 
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-7xl mx-auto">
 
-                {/* Main Card */}
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {/* Breadcrumb */}
 
-                    {/* Image + Details */}
+                <div className="flex items-center gap-2 text-sm text-gray-500 mb-7">
+                    <button
+                        onClick={() => navigate("/")}
+                        className="hover:text-[#a47b43] transition"
+                    >
+                        Home
+                    </button>
+
+                    <span>/</span>
+
+                    <button
+                        onClick={() => navigate("/rooms")}
+                        className="hover:text-[#a47b43] transition"
+                    >
+                        Rooms
+                    </button>
+
+                    <span>/</span>
+
+                    <span className="text-[#26352d] font-semibold">
+                        Room {room.roomnumber}
+                    </span>
+                </div>
+
+                {/* Main Room Card */}
+
+                <div className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.07)]">
+
+                    {/* Room Image and Information */}
+
                     <div className="grid grid-cols-1 lg:grid-cols-2">
 
-                        {/* Room Image */}
-                        <div className="h-64 sm:h-80 lg:h-full min-h-[400px]">
+                        {/* Image */}
+
+                        <div className="relative h-[280px] sm:h-[420px] lg:h-[550px] bg-gray-200">
+
                             {image ? (
                                 <img
                                     src={image}
-                                    alt={`Room ${room.roomnumber}`}
+                                    alt={`Apple Tree Hotel Room ${room.roomnumber}`}
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                    <p className="text-gray-500">
-                                        No image available
-                                    </p>
+                                <div className="w-full h-full flex items-center justify-center text-gray-500">
+                                    No Image Available
                                 </div>
                             )}
+
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
+                            <div className="absolute bottom-6 left-6">
+                                <span className="bg-white/95 text-[#26352d] px-5 py-2 rounded-lg text-sm font-semibold shadow-lg">
+                                    APPLE TREE HOTEL
+                                </span>
+                            </div>
+
+                            <div className="absolute top-6 right-6">
+                                <span
+                                    className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide shadow-md ${roomUnavailable
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-emerald-100 text-emerald-800"
+                                        }`}
+                                >
+                                    {roomUnavailable ? "UNAVAILABLE" : "AVAILABLE"}
+                                </span>
+                            </div>
+
                         </div>
 
-                        {/* Room Information */}
-                        <div className="p-5 sm:p-8 lg:p-10">
+                        {/* Room Details */}
 
-                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                        <div className="p-6 sm:p-10 lg:p-12 flex flex-col justify-center">
+
+                            <p className="text-[#a47b43] text-xs font-bold tracking-[3px] uppercase mb-4">
+                                EXCLUSIVE ACCOMMODATION
+                            </p>
+
+                            <div className="flex justify-between items-start gap-3">
 
                                 <div>
-                                    <p className="text-sm text-blue-600 font-semibold uppercase">
+                                    <p className="text-gray-500 text-sm font-medium">
                                         {room.roomtype}
                                     </p>
 
-                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">
+                                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[#26352d] mt-2">
                                         Room {room.roomnumber}
                                     </h1>
                                 </div>
 
-                                <div
-                                    className={`px-3 py-1 rounded-full text-sm font-semibold w-fit ${room.isavailable
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-red-100 text-red-700"
-                                        }`}
-                                >
-                                    {room.isavailable ? "Available" : "Not Available"}
+                                <div className="hidden sm:block text-[#b38a4b] text-4xl">
+                                    ✦
                                 </div>
 
                             </div>
 
                             {/* Price */}
-                            <div className="mt-6">
-                                <span className="text-3xl font-bold text-gray-900">
-                                    ₹{room.price}
+
+                            <div className="mt-7 flex items-baseline gap-2">
+
+                                <span className="text-4xl sm:text-5xl font-bold text-[#26352d]">
+                                    ₹{Number(room.price).toLocaleString("en-IN")}
                                 </span>
 
-                                <span className="text-gray-500 ml-2">
+                                <span className="text-gray-500 text-sm">
                                     / night
                                 </span>
+
                             </div>
+
+                            <div className="w-16 h-1 bg-[#b38a4b] mt-7 rounded-full"></div>
 
                             {/* Description */}
-                            <div className="mt-6">
-                                <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                                    About this room
+
+                            <div className="mt-7">
+
+                                <h2 className="text-xl font-semibold text-[#26352d] mb-3">
+                                    About This Room
                                 </h2>
 
-                                <p className="text-gray-600 leading-7">
+                                <p className="text-gray-600 leading-8 text-sm sm:text-base">
                                     {room.description}
                                 </p>
+
                             </div>
 
-                            {/* Room Info */}
-                            <div className="grid grid-cols-2 gap-4 mt-6">
+                            {/* Room Information */}
 
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <p className="text-sm text-gray-500">
+                            <div className="grid grid-cols-2 gap-4 mt-8">
+
+                                <div className="bg-[#f7f5f0] rounded-xl p-4 sm:p-5">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">
                                         Location
                                     </p>
 
-                                    <p className="font-semibold text-gray-800 mt-1">
+                                    <p className="text-[#26352d] font-semibold mt-2">
                                         {room.location}
                                     </p>
                                 </div>
 
-                                <div className="bg-gray-50 rounded-xl p-4">
-                                    <p className="text-sm text-gray-500">
-                                        Capacity
+                                <div className="bg-[#f7f5f0] rounded-xl p-4 sm:p-5">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">
+                                        Guest Capacity
                                     </p>
 
-                                    <p className="font-semibold text-gray-800 mt-1">
-                                        {room.capacity} Guest
+                                    <p className="text-[#26352d] font-semibold mt-2">
+                                        {room.capacity} Guests
+                                    </p>
+                                </div>
+
+                                <div className="bg-[#f7f5f0] rounded-xl p-4 sm:p-5">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">
+                                        Room Type
+                                    </p>
+
+                                    <p className="text-[#26352d] font-semibold mt-2">
+                                        {room.roomtype}
+                                    </p>
+                                </div>
+
+                                <div className="bg-[#f7f5f0] rounded-xl p-4 sm:p-5">
+                                    <p className="text-xs text-gray-500 uppercase tracking-wider">
+                                        Room Number
+                                    </p>
+
+                                    <p className="text-[#26352d] font-semibold mt-2">
+                                        {room.roomnumber}
                                     </p>
                                 </div>
 
                             </div>
 
+                            {/* Hospitality Message */}
+
+                            <div className="mt-8 border-l-2 border-[#b38a4b] pl-4">
+                                <p className="text-sm text-gray-500 italic leading-7">
+                                    Experience exceptional comfort, thoughtful
+                                    hospitality and a memorable stay at
+                                    Apple Tree Hotel.
+                                </p>
+                            </div>
+
                         </div>
+
                     </div>
 
-                    {/* Booking Section */}
-                    <div className="border-t border-gray-200 p-5 sm:p-8">
+                    {/* Customer Booking Section */}
 
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-5">
-                            Book this room
-                        </h2>
+                    {isCustomer && (
+                        <div className="border-t border-gray-200">
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="bg-[#26352d] px-6 sm:px-10 py-7">
 
-                            {/* Check In */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    Check-in
-                                </label>
+                                <p className="text-[#d8b47a] text-xs font-bold tracking-[3px]">
+                                    RESERVATION
+                                </p>
 
-                                <input
-                                    type="date"
-                                    value={checkIn}
-                                    onChange={(e) => setCheckIn(e.target.value)}
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                                <h2 className="text-2xl sm:text-3xl text-white font-semibold mt-2">
+                                    Book Your Stay
+                                </h2>
+
+                                <p className="text-gray-300 text-sm mt-2">
+                                    Choose your dates and enjoy a comfortable stay with us.
+                                </p>
+
                             </div>
 
-                            {/* Check Out */}
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    Check-out
-                                </label>
+                            <div className="p-6 sm:p-10">
 
-                                <input
-                                    type="date"
-                                    value={checkOut}
-                                    min={checkIn}
-                                    onChange={(e) => setCheckOut(e.target.value)}
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                                {/* Date Selection */}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-[#26352d] mb-3">
+                                            Check-in Date
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            min={today}
+                                            value={checkIn}
+                                            onChange={(e) => {
+                                                setCheckIn(e.target.value);
+
+                                                if (
+                                                    checkOut &&
+                                                    e.target.value >= checkOut
+                                                ) {
+                                                    setCheckOut("");
+                                                }
+                                            }}
+                                            className="w-full bg-[#faf9f6] border border-gray-200 rounded-xl px-4 py-4 text-gray-700 outline-none focus:border-[#b38a4b] focus:ring-2 focus:ring-[#b38a4b]/20 transition"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-[#26352d] mb-3">
+                                            Check-out Date
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            min={checkIn || today}
+                                            value={checkOut}
+                                            onChange={(e) => setCheckOut(e.target.value)}
+                                            className="w-full bg-[#faf9f6] border border-gray-200 rounded-xl px-4 py-4 text-gray-700 outline-none focus:border-[#b38a4b] focus:ring-2 focus:ring-[#b38a4b]/20 transition"
+                                        />
+                                    </div>
+
+                                </div>
+
+                                {/* Availability Message */}
+
+                                {checkingAvailability && (
+                                    <div className="mt-5 text-sm text-[#a47b43] font-medium">
+                                        Checking room availability...
+                                    </div>
+                                )}
+
+                                {!checkingAvailability && isAvailable === true && (
+                                    <div className="mt-5 bg-emerald-50 text-emerald-700 p-4 rounded-xl text-sm font-medium">
+                                        ✓ Great! This room is available for your selected dates.
+                                    </div>
+                                )}
+
+                                {!checkingAvailability && isAvailable === false && (
+                                    <div className="mt-5 bg-red-50 text-red-700 p-4 rounded-xl text-sm font-medium">
+                                        This room is not available for your selected dates. Please choose different dates.
+                                    </div>
+                                )}
+
+                                {/* Price Summary */}
+
+                                {nights > 0 && (
+                                    <div className="mt-7 bg-[#f7f5f0] border border-[#e8e1d5] rounded-2xl p-5 sm:p-7">
+
+                                        <div className="flex justify-between items-center text-sm text-gray-600">
+                                            <span>
+                                                ₹{Number(room.price).toLocaleString("en-IN")} × {nights} {nights === 1 ? "night" : "nights"}
+                                            </span>
+
+                                            <span className="font-semibold text-[#26352d]">
+                                                ₹{totalPrice.toLocaleString("en-IN")}
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                )}
+
+                                {/* Book Button */}
+
+                                <button
+                                    onClick={handleBooking}
+                                    disabled={
+                                        checkingAvailability ||
+                                        roomUnavailable ||
+                                        unavailableForDates
+                                    }
+                                    className="w-full mt-7 bg-[#26352d] hover:bg-[#a47b43] disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                                >
+                                    {roomUnavailable
+                                        ? "Room Unavailable"
+                                        : checkingAvailability
+                                            ? "Checking Availability..."
+                                            : unavailableForDates
+                                                ? "Not Available for Selected Dates"
+                                                : "Book Now  →"}
+                                </button>
+
+                                <p className="text-center text-xs text-gray-500 mt-4">
+                                    Secure payment processing through Razorpay.
+                                    Your booking is confirmed after successful payment verification.
+                                </p>
+
                             </div>
-
                         </div>
+                    )}
 
-                        {/* Price Summary */}
-                        {nights > 0 && (
-                            <div className="mt-6 bg-blue-50 rounded-xl p-5">
+                    {/* Admin and Receptionist Management Section */}
 
-                                <div className="flex justify-between mb-2">
-                                    <span className="text-gray-600">
-                                        ₹{room.price} × {nights} night
-                                        {nights > 1 ? "s" : ""}
-                                    </span>
+                    {isManager && (
+                        <div className="border-t border-gray-200 p-6 sm:p-10 bg-[#faf9f6]">
 
-                                    <span className="font-semibold">
-                                        ₹{totalPrice}
-                                    </span>
-                                </div>
+                            <p className="text-[#a47b43] text-xs font-bold tracking-[3px]">
+                                ROOM MANAGEMENT
+                            </p>
 
-                                <div className="border-t border-blue-200 my-3"></div>
+                            <h2 className="text-2xl font-semibold text-[#26352d] mt-2">
+                                Manage Room {room.roomnumber}
+                            </h2>
 
-                                <div className="flex justify-between">
-                                    <span className="font-bold text-gray-800">
-                                        Total
-                                    </span>
+                            <p className="text-sm text-gray-500 mt-2">
+                                Update room information or manage this room from the administration panel.
+                            </p>
 
-                                    <span className="text-xl font-bold text-blue-600">
-                                        ₹{totalPrice}
-                                    </span>
-                                </div>
+                            <div className="flex flex-col sm:flex-row gap-4 mt-7">
 
-                            </div>
-                        )}
-                        {/* Role Based Buttons */}
-
-                        {user?.role === "customer" ? (
-                            <button
-                                onClick={handleBooking}
-                                disabled={checkingAvailability || isBooked || !room.isavailable}
-                                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3.5 rounded-xl transition duration-200"
-                            >
-                                {isBooked || !room.isavailable ? "Booked" : "Book Now"}
-                            </button>
-                        ) : user?.role === "admin" || user?.role === "receptionist" ? (
-                            <div className="flex flex-wrap gap-4 mt-6">
                                 <button
                                     onClick={() => navigate(`/updateroom/${room._id}`)}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl transition duration-200"
+                                    className="flex-1 bg-[#26352d] hover:bg-[#a47b43] text-white font-semibold py-4 px-6 rounded-xl transition duration-300"
                                 >
-                                    Update Room
+                                    ✎ &nbsp; Update Room
                                 </button>
 
                                 <button
                                     onClick={() => navigate(`/deleteroom/${room._id}`)}
-                                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-xl transition duration-200"
+                                    className="flex-1 bg-white border border-red-300 hover:bg-red-600 hover:text-white text-red-600 font-semibold py-4 px-6 rounded-xl transition duration-300"
                                 >
                                     Delete Room
                                 </button>
+
                             </div>
-                        ) : null}
-                    </div>
+
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Bottom Information */}
+
+                <div className="text-center mt-8">
+
+                    <p className="text-[#a47b43] text-xs font-bold tracking-[3px]">
+                        APPLE TREE HOTEL
+                    </p>
+
+                    <p className="text-gray-500 text-sm mt-2">
+                        Comfort in every moment. Memories in every stay.
+                    </p>
+
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 };
 
