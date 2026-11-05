@@ -67,7 +67,7 @@ const UpdateRoom = () => {
 
       alert("Room updated successfully!");
 
-      navigate(`/rooms/${id}`);
+      navigate('/roomlist');
     } catch (error) {
       console.log("Error updating room:", error);
     }
