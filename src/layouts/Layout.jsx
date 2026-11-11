@@ -180,7 +180,7 @@ const Layout = ({ children }) => {
 
                                 <li>
                                     <button
-                                        onClick={() => navigate("/rooms")}
+                                        onClick={() => navigate("/roomlist")}
                                         className="hover:text-[#D4B77E] transition"
                                     >
                                         Explore Rooms

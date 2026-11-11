@@ -61,16 +61,6 @@ const Home = () => {
 
             {/* Navigation Bar */}
             <nav className="home-navbar">
-                <div className="home-logo">
-                    <span className="logo-icon">✦</span>
-                    <span>
-                        APPLE<span className="logo-highlight"> TREE</span>
-                        <small>HOTEL & RESORT</small>
-                    </span>
-                </div>
-
-
-
                 <div className="home-nav-links">
                     <a href="#experience">Experience</a>
                     <a href="#about">About Us</a>
