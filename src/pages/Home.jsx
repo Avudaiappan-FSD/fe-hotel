@@ -59,15 +59,6 @@ const Home = () => {
     return (
         <div className="hotel-home">
 
-            {/* Navigation Bar */}
-            <nav className="home-navbar">
-                <div className="home-nav-links">
-                    <a href="#experience">Experience</a>
-                    <a href="#about">About Us</a>
-                </div>
-
-            </nav>
-
             {/* Hero Section */}
             <section
                 className="home-hero"
