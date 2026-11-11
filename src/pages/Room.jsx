@@ -130,7 +130,7 @@ const Room = () => {
                         The room you are looking for is unavailable.
                     </p>
                     <button
-                        onClick={() => navigate("/rooms")}
+                        onClick={() => navigate("/roomlist")}
                         className="mt-5 px-6 py-3 bg-[#26352d] text-white rounded-lg"
                     >
                         Back to Rooms
@@ -231,7 +231,7 @@ const Room = () => {
                     <span>/</span>
 
                     <button
-                        onClick={() => navigate("/rooms")}
+                        onClick={() => navigate("/roomlist")}
                         className="hover:text-[#a47b43] transition"
                     >
                         Rooms
