@@ -1,3 +1,6 @@
+import {useRef} from "react";
+import { Link } from "react-router-dom";
+
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
 import room3 from "../assets/room images/images (3).jpeg";
@@ -17,172 +20,498 @@ import room17 from "../assets/room images/images (17).jpeg";
 import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
-import { useRef } from "react";
 
 
-const roomImages = {
-    101: room1,
-    102: room2,
-    103: room3,
-    104: room4,
-    105: room5,
-    106: room7,
-    107: room8,
-    108: room9,
-    109: room10,
-    110: room11,
-    111: room12,
-    112: room13,
-    113: room14,
-    114: room15,
-    115: room16,
-    116: room17,
-    117: room18,
-    118: room19,
-    119: room20,
-};
+const rooms = [
+    { image: room1, number: "01" },
+    { image: room2, number: "02" },
+    { image: room3, number: "03" },
+    { image: room4, number: "04" },
+    { image: room5, number: "05" },
+    { image: room7, number: "06" },
+    { image: room8, number: "07" },
+    { image: room9, number: "08" },
+    { image: room10, number: "09" },
+    { image: room11, number: "10" },
+    { image: room12, number: "11" },
+    { image: room13, number: "12" },
+    { image: room14, number: "13" },
+    { image: room15, number: "14" },
+    { image: room16, number: "15" },
+    { image: room17, number: "16" },
+    { image: room18, number: "17" },
+    { image: room19, number: "18" },
+    { image: room20, number: "19" },
+];
 
 const Home = () => {
+
     const roomsRef = useRef(null);
-    const roomImages = [
-        room1, room2, room3, room4, room5, room7,
-        room8, room9, room10, room11, room12, room13, room14,
-        room15, room16, room17, room18, room19, room20
-    ]
+
     const slideRooms = (direction) => {
         if (roomsRef.current) {
-            roomsRef.current?.scrollBy({
-                left: direction * roomsRef.current.clientWidth * 0.8, behaviour: "smooth",
+            roomsRef.current.scrollBy({
+                left: direction * 340,
+                behavior: "smooth",
             });
         }
-    }
+    };
+
     return (
-        <div className="hotel-home">
+        <main className="hotel-home">
 
-            {/* Hero Section */}
+            {/* HERO SECTION */}
+
             <section
-                className="home-hero"
-            // style={{ backgroundImage: `url(${home})` }}
+                className="luxury-hero"
+                style={{
+                    backgroundImage: `url(${room3})`
+                }}
             >
-                <div className="hero-dark-overlay"></div>
 
-                <div className="hero-inner">
+                <div className="luxury-hero-overlay"></div>
 
-                    <div className="hero-label">
+                <div className="luxury-hero-content">
+
+                    <div className="luxury-eyebrow">
                         <span></span>
                         WELCOME TO APPLE TREE
                         <span></span>
                     </div>
 
                     <h1>
-                        Your Escape.
+                        Experience
                         <br />
-                        <span>Your Experience.</span>
+                        <em>Luxury Living.</em>
                     </h1>
 
-                    <p className="hero-description">
-                        Discover a world of comfort, elegance and exceptional
-                        hospitality. Your perfect stay begins here.
+                    <p className="luxury-hero-description">
+                        Discover a beautiful escape where comfort meets
+                        elegance. Experience exceptional hospitality and
+                        create memories that last forever.
                     </p>
 
-                    <div className="hero-actions">
+                    <div className="luxury-hero-buttons">
 
+                        <Link to="/roomlist" className="luxury-primary-btn">
+                            Explore Our Rooms
+                            <span>↗</span>
+                        </Link>
 
-                        <a href="#experience" className="discover-btn">
-                            Discover More <span>↗</span>
+                        <a href="#about" className="luxury-outline-btn">
+                            Discover Our Story
                         </a>
+
                     </div>
 
-                    <div className="hero-rating">
-                        <div className="rating-stars">★★★★★</div>
-                        <div>
-                            <strong>Exceptional Hospitality</strong>
-                            <p>Every stay, a special experience</p>
+                    <div className="luxury-hero-bottom">
+
+                        <div className="luxury-rating">
+                            <span>★★★★★</span>
+                            <div>
+                                <strong>A Stay Beyond Expectations</strong>
+                                <small>Comfort · Elegance · Hospitality</small>
+                            </div>
                         </div>
+
+                        <div className="luxury-scroll">
+                            SCROLL TO EXPLORE
+                            <span>↓</span>
+                        </div>
+
                     </div>
+
                 </div>
 
-                <div className="hero-side-text">
-                    COMFORT · LUXURY · EXPERIENCE
+                <div className="hero-vertical-text">
+                    APPLE TREE HOTEL & RESORT
                 </div>
 
-                <div className="hero-bottom">
-                    <span>YOUR JOURNEY TO COMFORT STARTS HERE</span>
-                    <span>01 — 03</span>
-                </div>
             </section>
 
-            {/* Welcome Section */}
-            <section className="welcome-section" id="about">
-                <div className="welcome-heading">
-                    <span className="section-label">THE GRANDSTAY EXPERIENCE</span>
+
+            {/* INTRODUCTION SECTION */}
+
+            <section className="luxury-intro" id="about">
+
+                <div className="intro-left">
+
+                    <span className="luxury-section-label">
+                        THE ART OF HOSPITALITY
+                    </span>
 
                     <h2>
-                        More Than a Stay.
+                        Not Just a Stay.
                         <br />
-                        <span>A Feeling of Belonging.</span>
+                        <em>A Beautiful Experience.</em>
                     </h2>
-                </div>
-
-                <p className="welcome-description">
-                    From thoughtfully designed rooms to warm hospitality,
-                    every detail is created to make your visit memorable.
-                    Relax, recharge and make yourself at home.
-                </p>
-            </section>
-
-            {/* Features */}
-            <section className="features-section" id="experience">
-
-                <div className="feature-card">
-                    <div className="feature-icon">⌂</div>
-                    <span className="feature-number">01</span>
-                    <h3>Elegant Rooms</h3>
-                    <p>
-                        Beautifully designed spaces created for relaxation
-                        and peaceful stays.
-                    </p>
-                </div>
-
-                <div className="feature-card">
-                    <div className="feature-icon">✧</div>
-                    <span className="feature-number">02</span>
-                    <h3>Premium Comfort</h3>
-                    <p>
-                        Enjoy thoughtful amenities and comfort throughout
-                        your entire visit.
-                    </p>
 
                 </div>
 
-                <div className="feature-card">
-                    <div className="feature-icon">♡</div>
-                    <span className="feature-number">03</span>
-                    <h3>Warm Hospitality</h3>
+                <div className="intro-right">
+
                     <p>
-                        Friendly service and attention to detail make
-                        every guest feel welcome.
+                        Welcome to Apple Tree Hotel & Resort, where every
+                        moment is designed around your comfort.
+
+                        From thoughtfully designed accommodation to
+                        welcoming hospitality, discover a place where
+                        relaxation comes naturally.
                     </p>
-                    <a href="#about">Our philosophy ↗</a>
+
+                    <Link to="/roomlist" className="text-discover-link">
+                        Discover Our Rooms <span>↗</span>
+                    </Link>
+
                 </div>
 
             </section>
 
-            {/* Final Booking Banner */}
-            <section className="booking-banner">
-                <div>
-                    <span className="section-label">YOUR NEXT CHAPTER STARTS HERE</span>
-                    <h2>Ready for a Memorable Stay?</h2>
-                    <p>Find your room and make your next visit special.</p>
+
+            {/* ROOMS SHOWCASE */}
+
+            <section className="luxury-rooms" id="rooms">
+
+                <div className="rooms-heading">
+
+                    <div>
+                        <span className="luxury-section-label">
+                            YOUR PRIVATE RETREAT
+                        </span>
+
+                        <h2>
+                            Discover Our
+                            <em> Rooms.</em>
+                        </h2>
+
+                        <p>
+                            Thoughtfully designed spaces for your perfect stay.
+                        </p>
+                    </div>
+
+                    <div className="room-slider-controls">
+
+                        <button
+                            type="button"
+                            onClick={() => slideRooms(-1)}
+                            aria-label="Previous rooms"
+                        >
+                            ←
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => slideRooms(1)}
+                            aria-label="Next rooms"
+                        >
+                            →
+                        </button>
+
+                    </div>
+
                 </div>
+
+
+                <div className="rooms-slider" ref={roomsRef}>
+
+                    {rooms.map((room) => (
+
+                        <Link
+                            to="/roomlist"
+                            className="luxury-room-card"
+                            key={room.number}
+                        >
+
+                            <div className="luxury-room-image">
+
+                                <img
+                                    src={room.image}
+                                    alt={`Apple Tree Hotel room inspiration ${room.number}`}
+                                    loading="lazy"
+                                />
+
+                                <span className="room-image-number">
+                                    {room.number}
+                                </span>
+
+                                <div className="room-image-overlay">
+                                    <span>EXPLORE ROOMS ↗</span>
+                                </div>
+
+                            </div>
+
+                            <div className="luxury-room-info">
+
+                                <div>
+                                    <span>APPLE TREE COLLECTION</span>
+                                    <h3>Discover Your Stay</h3>
+                                </div>
+
+                                <div className="room-card-arrow">
+                                    ↗
+                                </div>
+
+                            </div>
+
+                        </Link>
+
+                    ))}
+
+                </div>
+
+
+                <div className="rooms-bottom">
+
+                    <span>
+                        FIND YOUR PERFECT SPACE
+                    </span>
+
+                    <Link to="/roomlist">
+                        VIEW ALL ROOMS ↗
+                    </Link>
+
+                </div>
+
             </section>
 
-            {/* Footer */}
-            <footer className="home-footer">
-                <p>Comfort in every moment. Memories in every stay.</p>
-                <span>© {new Date().getFullYear()} GrandStay Hotel</span>
+
+            {/* EXPERIENCE SECTION */}
+
+            <section className="luxury-experience">
+
+                <div className="experience-heading">
+
+                    <span className="luxury-section-label">
+                        WHY APPLE TREE
+                    </span>
+
+                    <h2>
+                        Every Detail.
+                        <br />
+                        <em>Thoughtfully Designed.</em>
+                    </h2>
+
+                    <p>
+                        Because a memorable stay is created through
+                        comfort, care and attention to every detail.
+                    </p>
+
+                </div>
+
+
+                <div className="experience-grid">
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">01</span>
+                        <div className="experience-icon">⌂</div>
+
+                        <h3>Elegant Accommodation</h3>
+
+                        <p>
+                            Beautifully presented rooms designed to
+                            make every stay comfortable and relaxing.
+                        </p>
+
+                    </div>
+
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">02</span>
+                        <div className="experience-icon">✧</div>
+
+                        <h3>Exceptional Comfort</h3>
+
+                        <p>
+                            Enjoy thoughtfully arranged spaces
+                            that help you relax and feel at home.
+                        </p>
+
+                    </div>
+
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">03</span>
+                        <div className="experience-icon">♡</div>
+
+                        <h3>Warm Hospitality</h3>
+
+                        <p>
+                            A welcoming experience with attention
+                            to the little things that matter.
+                        </p>
+
+                    </div>
+
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">04</span>
+                        <div className="experience-icon">◇</div>
+
+                        <h3>Easy Reservations</h3>
+
+                        <p>
+                            Explore available rooms and conveniently
+                            reserve your preferred accommodation online.
+                        </p>
+
+                    </div>
+
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">05</span>
+                        <div className="experience-icon">◎</div>
+
+                        <h3>Secure Payments</h3>
+
+                        <p>
+                            Complete your room reservation through
+                            our integrated online payment experience.
+                        </p>
+
+                    </div>
+
+
+                    <div className="experience-card">
+
+                        <span className="experience-number">06</span>
+                        <div className="experience-icon">✦</div>
+
+                        <h3>Memorable Moments</h3>
+
+                        <p>
+                            Make every visit special with a stay
+                            created around comfort and convenience.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            {/* LUXURY BOOKING BANNER */}
+
+            <section className="luxury-booking">
+
+                <div className="booking-overlay"></div>
+
+                <div className="booking-content">
+
+                    <span className="luxury-section-label">
+                        YOUR NEXT ESCAPE AWAITS
+                    </span>
+
+                    <h2>
+                        Make Room for
+                        <br />
+                        <em>Beautiful Memories.</em>
+                    </h2>
+
+                    <p>
+                        Your perfect stay is just a reservation away.
+                        Discover comfort, elegance and warm hospitality
+                        at Apple Tree Hotel & Resort.
+                    </p>
+
+                    <Link to="/roomlist" className="luxury-primary-btn">
+                        Book Your Stay
+                        <span>↗</span>
+                    </Link>
+
+                </div>
+
+            </section>
+
+
+            {/* FOOTER */}
+
+            <footer className="luxury-footer">
+
+                <div className="footer-main">
+
+                    <div className="footer-brand">
+
+                        <h2>
+                            <span>✧</span> APPLE TREE
+                        </h2>
+
+                        <small>HOTEL & RESORT</small>
+
+                        <p>
+                            A place where comfort meets elegance.
+                            Experience thoughtful hospitality and
+                            make every stay memorable.
+                        </p>
+
+                    </div>
+
+
+                    <div className="footer-column">
+
+                        <h3>EXPLORE</h3>
+
+                        <Link to="/">Home</Link>
+                        <Link to="/roomlist">Explore Rooms</Link>
+                        <Link to="/login">My Account</Link>
+                        <Link to="/register">Create Account</Link>
+
+                    </div>
+
+
+                    <div className="footer-column">
+
+                        <h3>OUR EXPERIENCE</h3>
+
+                        <a href="#about">About Apple Tree</a>
+                        <a href="#rooms">Our Rooms</a>
+                        <a href="#experience">Our Services</a>
+                        <Link to="/roomlist">Reservations</Link>
+
+                    </div>
+
+
+                    <div className="footer-column footer-contact">
+
+                        <h3>GET IN TOUCH</h3>
+
+                        <p>We look forward to welcoming you.</p>
+
+                        <a href="mailto:info@appletreehotel.com">
+                            Contact Us ↗
+                        </a>
+
+                        <div className="footer-socials">
+                            <span>INSTAGRAM</span>
+                            <span>FACEBOOK</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div className="footer-bottom">
+
+                    <span>
+                        © {new Date().getFullYear()} Apple Tree Hotel & Resort.
+                        All Rights Reserved.
+                    </span>
+
+                    <span>
+                        COMFORT · ELEGANCE · HOSPITALITY
+                    </span>
+
+                </div>
+
             </footer>
-        </div>
+
+        </main>
     );
 };
 
