@@ -125,7 +125,7 @@ const Home = () => {
             {/* Footer */}
             <footer className="home-footer">
                 <p>Comfort in every moment. Memories in every stay.</p>
-                <span>© {new Date().getFullYear()} GrandStay Hotel</span>
+                <span>© {new Date().getFullYear()} AppleTree Hotel</span>
             </footer>
         </div>
     );
