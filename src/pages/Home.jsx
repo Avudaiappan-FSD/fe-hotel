@@ -1,4 +1,4 @@
-
+import { ArrowLeft, ArrowRight } from "lucide-react";
 const Home = () => {
 
     return (
@@ -119,6 +119,10 @@ const Home = () => {
                     <span className="section-label">YOUR NEXT CHAPTER STARTS HERE</span>
                     <h2>Ready for a Memorable Stay?</h2>
                     <p>Find your room and make your next visit special.</p>
+                </div>
+                <div>
+                    <ArrowLeft size={24} className="arrow-icon text-[#a47b43]" />
+                    <ArrowRight size={24} className="arrow-icon text-[#a47b43]" />
                 </div>
             </section>
 

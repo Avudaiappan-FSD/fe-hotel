@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import bookingServices from "../services/bookingServices";
+import tree from "../assets/tree.png";
 
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -310,7 +311,7 @@ const Room = () => {
                                 </div>
 
                                 <div className="hidden sm:block text-[#b38a4b] text-4xl">
-                                    ✦
+                                    <img src={tree} alt="Apple Tree Logo" className="w-10 h-10" />
                                 </div>
 
                             </div>
