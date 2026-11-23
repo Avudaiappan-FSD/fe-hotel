@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -21,7 +21,7 @@ import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
 const Home = () => {
-    const navigate = Navigate();
+    const navigate = useNavigate();
     const roomImages = [
         {
             id: 1,
@@ -288,7 +288,7 @@ const Home = () => {
 
             </section>
             <div className="buttonhm">
-                <button onClick={()=> navigate("/register")}>Book Room</button>
+                <button onClick={() => navigate("/register")}>Book Room</button>
             </div>
             {/* Footer */}
             <footer className="home-footer">
