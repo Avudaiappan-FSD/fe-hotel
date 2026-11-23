@@ -1,6 +1,46 @@
+import { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import room1 from "../assets/room images/images (1).jpeg";
+import room2 from "../assets/room images/images (2).jpeg";
+import room3 from "../assets/room images/images (3).jpeg";
+import room4 from "../assets/room images/images (4).jpeg";
+import room5 from "../assets/room images/images (5).jpeg";
+import room7 from "../assets/room images/images (7).jpg";
+import room8 from "../assets/room images/images (8).jpeg";
+import room9 from "../assets/room images/images (9).jpeg";
+import room10 from "../assets/room images/images (10).jpeg";
+import room11 from "../assets/room images/images (11).jpeg";
+import room12 from "../assets/room images/images (12).jpeg";
+import room13 from "../assets/room images/images (13).jpeg";
+import room14 from "../assets/room images/images (14).jpeg";
+import room15 from "../assets/room images/images (15).jpeg";
+import room16 from "../assets/room images/images (16).jpeg";
+import room17 from "../assets/room images/images (17).jpeg";
+import room18 from "../assets/room images/images (18).jpeg";
+import room19 from "../assets/room images/images (19).jpeg";
+import room20 from "../assets/room images/images.jpeg";
 const Home = () => {
-
+    const roomImages = [
+        {
+            id: 1,
+            image: room1,
+            title: "Deluxe Room",
+            description: "Experience premium comfort"
+        },
+        {
+            id: 2,
+            image: room2,
+            title: "Double Room",
+            description: "Enjoy Elegance and comfort"
+        }
+    ];
+    const [currentRoom, setcurrentRoom] = useState(0);
+    const nextRoom = () => {
+        setcurrentRoom((prev) => (prev + 1) % roomImages.length);
+    };
+    const prevRoom = () => {
+        setcurrentRoom((prev) => (prev - 1 + roomImages.length) % roomImages.length);
+    };
     return (
         <div className="hotel-home">
 
@@ -120,12 +160,69 @@ const Home = () => {
                     <h2>Ready for a Memorable Stay?</h2>
                     <p>Find your room and make your next visit special.</p>
                 </div>
-                <div>
-                    <ArrowLeft size={24} className="arrow-icon text-[#a47b43]" />
-                    <ArrowRight size={24} className="arrow-icon text-[#a47b43]" />
-                </div>
             </section>
+            {/* Room Image Carousel */}
+            <section className="rooms-carousel-section">
 
+                <div className="rooms-carousel-heading">
+                    <div>
+                        <span className="section-label">
+                            DISCOVER YOUR PERFECT STAY
+                        </span>
+
+                        <h2>
+                            Explore Our <span>Rooms</span>
+                        </h2>
+
+                        <p>
+                            Find the perfect space for your next memorable stay.
+                        </p>
+                    </div>
+
+                    <div className="room-navigation">
+                        <button onClick={prevRoom} aria-label="Previous room">
+                            <ArrowLeft size={22} />
+                        </button>
+
+                        <button onClick={nextRoom} aria-label="Next room">
+                            <ArrowRight size={22} />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="room-carousel">
+                    {roomImages.map((room, index) => (
+                        <div
+                            className={`room-slide ${index === currentRoom ? "active" : ""
+                                }`}
+                            key={room.id}
+                            style={{
+                                transform: `translateX(-${currentRoom * 100}%)`
+                            }}
+                        >
+                            <img src={room.image} alt={room.title} />
+
+                            <div className="room-slide-content">
+                                <span>APPLE TREE HOTEL</span>
+                                <h3>{room.title}</h3>
+                                <p>{room.description}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="room-carousel-indicators">
+                    {roomImages.map((room, index) => (
+                        <button
+                            key={room.id}
+                            className={currentRoom === index ? "active" : ""}
+                            onClick={() => setCurrentRoom(index)}
+                            aria-label={`Go to ${room.title}`}
+                        />
+                    ))}
+                </div>
+
+            </section>
             {/* Footer */}
             <footer className="home-footer">
                 <p>Comfort in every moment. Memories in every stay.</p>
