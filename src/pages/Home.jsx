@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import room1 from "../assets/room images/images (1).jpeg";
 import room2 from "../assets/room images/images (2).jpeg";
@@ -20,6 +21,7 @@ import room18 from "../assets/room images/images (18).jpeg";
 import room19 from "../assets/room images/images (19).jpeg";
 import room20 from "../assets/room images/images.jpeg";
 const Home = () => {
+    const navigate = Navigate();
     const roomImages = [
         {
             id: 1,
@@ -278,13 +280,16 @@ const Home = () => {
                         <button
                             key={room.id}
                             className={currentRoom === index ? "active" : ""}
-                            onClick={() => setCurrentRoom(index)}
+                            onClick={() => setcurrentRoom(index)}
                             aria-label={`Go to ${room.title}`}
                         />
                     ))}
                 </div>
 
             </section>
+            <div className="buttonhm">
+                <button onClick={()=> navigate("/register")}>Book Room</button>
+            </div>
             {/* Footer */}
             <footer className="home-footer">
                 <p>Comfort in every moment. Memories in every stay.</p>

@@ -824,3 +824,11 @@
         height: 40px;
     }
 }
+
+.buttonhm {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    background: #d5b17a;
+    text-align: center;
+}
