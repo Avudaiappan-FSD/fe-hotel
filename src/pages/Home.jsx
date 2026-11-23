@@ -32,7 +32,69 @@ const Home = () => {
             image: room2,
             title: "Double Room",
             description: "Enjoy Elegance and comfort"
+        },
+        {
+            id: 3,
+            image: room3,
+            title: "Suite Room",
+            description: "Indulge in luxury and style"
+        },
+        {
+            id: 4,
+            image: room4,
+            title: "Family Room",
+            description: "Perfect for your loved ones"
+        },
+        {
+            id: 5,
+            image: room5,
+            title: "Single Room",
+            description: "Ideal for solo travelers"
+        },
+        {
+            id: 6,
+            image: room7,
+            title: "Executive Room",
+            description: "Experience unparalleled comfort and service"
+        },
+        {
+            id: 7,
+            image: room8,
+            title: "Presidential Suite",
+            description: "Experience the pinnacle of luxury and sophistication"
+        },
+        {
+            id: 8,
+            image: room9,
+            title: "Honeymoon Suite",
+            description: "A romantic retreat for couples"
+        },
+        {
+            id: 9,
+            image: room10,
+            title: "Business Suite",
+            description: "Perfect for professional travelers"
+        },
+        {
+            id: 10,
+            image: room11,
+            title: "Standard Room",
+            description: "Comfortable and well-appointed"
+        },
+        {
+            id: 11,
+            image: room12,
+            title: "Accessible Room",
+            description: "Thoughtfully designed for accessibility"
+        },
+        {
+            id: 12,
+            image: room13,
+            title: "Ocean View Room",
+            description: "Breathtaking views of the ocean"
         }
+
+
     ];
     const [currentRoom, setcurrentRoom] = useState(0);
     const nextRoom = () => {
