@@ -13,13 +13,7 @@ import room10 from "../assets/room images/images (10).jpeg";
 import room11 from "../assets/room images/images (11).jpeg";
 import room12 from "../assets/room images/images (12).jpeg";
 import room13 from "../assets/room images/images (13).jpeg";
-import room14 from "../assets/room images/images (14).jpeg";
-import room15 from "../assets/room images/images (15).jpeg";
-import room16 from "../assets/room images/images (16).jpeg";
-import room17 from "../assets/room images/images (17).jpeg";
-import room18 from "../assets/room images/images (18).jpeg";
-import room19 from "../assets/room images/images (19).jpeg";
-import room20 from "../assets/room images/images.jpeg";
+
 const Home = () => {
     const navigate = useNavigate();
     const roomImages = [
