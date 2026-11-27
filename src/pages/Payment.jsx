@@ -153,7 +153,7 @@ const Payment = () => {
                             // Navigate only after backend confirmation.
                             // Update this route if your app uses a different
                             // My Bookings route.
-                            navigate(`/mybookings/${room._id}`, {
+                            navigate(`/mybookings/${user._id}`, {
                                 replace: true,
                                 state: {
                                     booking: result.booking,
